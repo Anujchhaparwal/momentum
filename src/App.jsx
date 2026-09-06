@@ -1,5 +1,6 @@
 import Sidebar from "./components/Sidebar";
 import "./App.css";
+import Dashboard from "./components/Dashboard";
 
 function App() {
   return (
@@ -7,8 +8,7 @@ function App() {
       <Sidebar />
 
       <main>
-        <h1>Dashboard</h1>
-        <p>Welcome to momentum.</p>
+        <Dashboard />
       </main>
     </div>
   );
