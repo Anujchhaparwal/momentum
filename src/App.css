@@ -86,7 +86,55 @@
   color: #fbbf24;
 }
 
-.priority.done {
+.priority.low {
   color: #4ade80;
 }
 
+.tasks-page {
+  padding: 32px;
+}
+
+.task-input {
+  display: flex;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.task-input input {
+  width: 400px;
+  padding: 12px;
+  border-radius: 8px;
+  border: none;
+}
+
+.task-input button {
+  padding: 12px 20px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  background-color: #6366f1;
+  color: white;
+  font-weight: 600;
+}
+
+.tasks-page h2 {
+  margin-top: 32px;
+}
+
+.completed {
+  text-decoration: line-through;
+  opacity: 0.6;
+}
+
+.task-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.task-item button {
+  background: transparent;
+  border: none;
+  color: #f87171;
+  cursor: pointer;
+}
