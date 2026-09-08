@@ -1,14 +1,26 @@
 import Sidebar from "./components/Sidebar";
 import "./App.css";
 import Dashboard from "./components/Dashboard";
+import { useState } from "react";
 
 function App() {
+  const [activePage, setActivePage] = useState("Dashboard");
   return (
     <div className="app">
-      <Sidebar />
+      <Sidebar setActivePage={setActivePage} />
 
       <main>
-        <Dashboard />
+        {activePage === "Dashboard" && <Dashboard />}
+        
+        {activePage === "Tasks" && <h1>Tasks</h1>}
+
+        {activePage === "Goals" && <h1>Goals</h1>}
+
+        {activePage === "Habits" && <h1>Habits</h1>}
+
+        {activePage === "Finances" && <h1>Finances</h1>}
+
+        {activePage === "Analytics" && <h1>Analytics</h1>}
       </main>
     </div>
   );

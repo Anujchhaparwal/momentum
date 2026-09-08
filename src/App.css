@@ -11,7 +11,7 @@
 }
 
 .sidebar p {
-  margin: 24px 0;
+  margin: 12px 0;
   cursor: pointer;
   padding: 12px 0;
 }
@@ -19,3 +19,74 @@
 .app {
   display: flex;
 }
+
+.dashboard {
+  padding: 32px;
+}
+
+.dashboard-header h1 {
+  margin: 0;
+}
+
+.dashboard-header p {
+  margin-top: 8px;
+}
+
+.stats {
+  display: flex;
+  gap: 16px;
+  margin-top: 32px;
+}
+
+.stat-card {
+  background-color: #1f2937;
+  padding: 20px;
+  border-radius: 12px;
+  width: 200px;
+}
+
+.stat-card h3 {
+  margin: 0 0 8px;
+}
+
+.stat-card p {
+  margin: 0;
+}
+
+.tasks-section {
+  margin-top: 24px;
+}
+
+.task-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.task-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #1f2937;
+  padding: 16px;
+  border-radius: 8px;
+  max-width: 700px;
+}
+
+.priority {
+  padding: 4px 8px;
+  border-radius: 6px;
+}
+
+.priority.high {
+  color: #f87171;
+}
+
+.priority.medium {
+  color: #fbbf24;
+}
+
+.priority.done {
+  color: #4ade80;
+}
+
