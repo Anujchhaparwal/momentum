@@ -2,6 +2,7 @@ import Sidebar from "./components/Sidebar";
 import "./App.css";
 import Dashboard from "./components/Dashboard";
 import Tasks from "./components/Tasks";
+import Goals from "./components/Goals";
 import { useState } from "react";
 
 function App() {
@@ -15,7 +16,7 @@ function App() {
 
         {activePage === "Tasks" && <Tasks />}
 
-        {activePage === "Goals" && <h1>Goals</h1>}
+        {activePage === "Goals" && <Goals />}
 
         {activePage === "Habits" && <h1>Habits</h1>}
 
