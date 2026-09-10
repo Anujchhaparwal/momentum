@@ -4,6 +4,7 @@ import Dashboard from "./components/Dashboard";
 import Tasks from "./components/Tasks";
 import Goals from "./components/Goals";
 import { useState } from "react";
+import Habits from "./components/Habits";
 
 function App() {
   const [activePage, setActivePage] = useState("Dashboard");
@@ -18,7 +19,7 @@ function App() {
 
         {activePage === "Goals" && <Goals />}
 
-        {activePage === "Habits" && <h1>Habits</h1>}
+        {activePage === "Habits" && <Habits />}
 
         {activePage === "Finances" && <h1>Finances</h1>}
 
