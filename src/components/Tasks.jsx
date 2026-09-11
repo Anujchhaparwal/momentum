@@ -1,8 +1,7 @@
 import { useState } from "react";
 
-function Tasks() {
+function Tasks({ tasks, setTasks }) {
   const [task, setTask] = useState("");
-  const [tasks, setTasks] = useState([]);
   const [priority, setPriority] = useState("Medium");
   return (
     <div className="tasks-page">

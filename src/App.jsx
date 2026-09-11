@@ -8,18 +8,21 @@ import Habits from "./components/Habits";
 
 function App() {
   const [activePage, setActivePage] = useState("Dashboard");
+  const [tasks, setTasks] = useState([]);
+  const [goals, setGoals] = useState([]);
+  const [habits, setHabits] = useState([]);
   return (
     <div className="app">
       <Sidebar setActivePage={setActivePage} />
 
       <main>
-        {activePage === "Dashboard" && <Dashboard />}
+        {activePage === "Dashboard" && <Dashboard setTasks={setTasks} tasks={tasks} goals={goals} habits={habits} />}
 
-        {activePage === "Tasks" && <Tasks />}
+        {activePage === "Tasks" && <Tasks tasks={tasks} setTasks={setTasks} />}
 
-        {activePage === "Goals" && <Goals />}
+        {activePage === "Goals" && <Goals goals={goals} setGoals={setGoals} />}
 
-        {activePage === "Habits" && <Habits />}
+        {activePage === "Habits" && <Habits habits={habits} setHabits={setHabits} />}
 
         {activePage === "Finances" && <h1>Finances</h1>}
 

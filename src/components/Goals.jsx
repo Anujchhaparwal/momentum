@@ -1,9 +1,9 @@
 import { useState } from "react";
 
 
-function Goals() {
+function Goals({ goals, setGoals }) {
   const [goal, setGoal] = useState("");
-  const [goals, setGoals] = useState([]);
+  
   return (
     <div className="goals-page">
       <h1>Goals</h1>

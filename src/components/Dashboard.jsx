@@ -1,7 +1,7 @@
 import StatCard from "./statCard";
 import TaskItem from "./TaskItem";
 
-function Dashboard() {
+function Dashboard({ tasks, setTasks, goals, habits }) {
   return (
     <div className="dashboard">
       <div className="dashboard-header">
@@ -9,17 +9,84 @@ function Dashboard() {
         <p>Good morning</p>
       </div>
       <div className="stats">
-        <StatCard title="Tasks" value="7/10 conmpleted" />
-        <StatCard title="Habits" value="4 / 5 completed" />
-        <StatCard title="Goals" value="3 active" />
+        <StatCard
+          title="Tasks"
+          value={`${tasks.filter((task) => task.completed).length} / ${tasks.length} completed`}
+        />
+        <StatCard
+          title="Goals"
+          value={`${goals.filter((goal) => !goal.completed).length} active`}
+        />
+        <StatCard
+          title="Habits"
+          value={`${habits.filter((habit) => !habit.completed).length} active`}
+        />
+
       </div>
       <div className="tasks-section">
         <h2>Today's Tasks</h2>
 
         <div className="task-list">
-          <TaskItem title="Finish React project" priority="High" />
-          <TaskItem title="Complete French exercise" priority="Medium" />
-          <TaskItem title="Go for a walk" priority="Done" />
+          {tasks.map((taskItem) => (
+            <TaskItem
+              key={taskItem.id}
+              title={taskItem.title}
+              priority={taskItem.priority}
+              completed={taskItem.completed}
+              onToggle={() => {
+                setTasks(
+                  tasks.map((item) =>
+                    item.id === taskItem.id
+                      ? { ...item, completed: !item.completed }
+                      : item
+                  )
+                );
+              }}
+            />
+          ))}
+        </div>
+      </div>
+      <div className="goals-section">
+        <h2>Goals</h2>
+        <div className="goal-list">
+          {goals.map((goalItem) => (
+            <div className="goal-item" key={goalItem.id}>
+              <div className="goal-details">
+                <span className={goalItem.completed ? "completed" : ""}>
+                  {goalItem.title}
+                </span>
+
+                <div className="progress-bar">
+                  <div
+                    className="progress-fill"
+                    style={{ width: `${goalItem.progress}%` }}
+                  ></div>
+                </div>
+              </div>
+
+              <span className="goal-progress">
+                {goalItem.progress}%
+              </span>
+            </div>
+          ))}
+        </div>
+
+      </div>
+      <div className="habits-section">
+        <h2>Today's Habits</h2>
+
+        <div className="habit-list">
+          {habits.map((habitItem) => (
+            <div className="habit-item" key={habitItem.id}>
+              <span className={habitItem.completed ? "completed" : ""}>
+                {habitItem.title}
+              </span>
+
+              <span className="habit-streak">
+                {habitItem.streak} day streak
+              </span>
+            </div>
+          ))}
         </div>
       </div>
     </div>

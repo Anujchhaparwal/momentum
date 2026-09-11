@@ -1,7 +1,14 @@
-function TaskItem({ title, priority }) {
+function TaskItem({ title, priority, completed, onToggle }) {
   return (
     <div className="task-item">
-      <span>{title}</span>
+      <input
+        type="checkbox"
+        checked={completed}
+        onChange={onToggle}
+      />
+      <span className={completed ? "completed" : ""}>
+        {title}
+      </span>
       <span className={`priority ${priority.toLowerCase()}`}>
         {priority}
       </span>

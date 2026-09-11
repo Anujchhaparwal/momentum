@@ -1,8 +1,8 @@
 import { useState } from "react";
 
-function Habits() {
+function Habits({ habits, setHabits }) {
   const [habit, setHabit] = useState("");
-  const [habits, setHabits] = useState([]);
+  
   return (
     <div className="habits-page">
       <h1>Habits</h1>
