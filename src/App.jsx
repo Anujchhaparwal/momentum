@@ -3,14 +3,33 @@ import "./App.css";
 import Dashboard from "./components/Dashboard";
 import Tasks from "./components/Tasks";
 import Goals from "./components/Goals";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Habits from "./components/Habits";
 
 function App() {
   const [activePage, setActivePage] = useState("Dashboard");
-  const [tasks, setTasks] = useState([]);
-  const [goals, setGoals] = useState([]);
-  const [habits, setHabits] = useState([]);
+  const [tasks, setTasks] = useState(() => {
+    return JSON.parse(localStorage.getItem("tasks")) || [];
+  });
+  const [goals, setGoals] = useState(() => {
+    return JSON.parse(localStorage.getItem("goals")) || [];
+  });
+  const [habits, setHabits] = useState(() => {
+    return JSON.parse(localStorage.getItem("habits")) || [];
+  });
+
+  useEffect(() => {
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+  }, [tasks]);
+
+  useEffect(() => {
+    localStorage.setItem("goals", JSON.stringify(goals));
+  }, [goals]);
+
+  useEffect(() => {
+    localStorage.setItem("habits", JSON.stringify(habits));
+  }, [habits]);
+
   return (
     <div className="app">
       <Sidebar setActivePage={setActivePage} />

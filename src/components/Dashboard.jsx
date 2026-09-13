@@ -27,23 +27,26 @@ function Dashboard({ tasks, setTasks, goals, habits }) {
         <h2>Today's Tasks</h2>
 
         <div className="task-list">
-          {tasks.map((taskItem) => (
-            <TaskItem
-              key={taskItem.id}
-              title={taskItem.title}
-              priority={taskItem.priority}
-              completed={taskItem.completed}
-              onToggle={() => {
-                setTasks(
-                  tasks.map((item) =>
-                    item.id === taskItem.id
-                      ? { ...item, completed: !item.completed }
-                      : item
-                  )
-                );
-              }}
-            />
-          ))}
+          {[...tasks]
+            .sort((a, b) => a.completed - b.completed)
+            .slice(0, 5)
+            .map((taskItem) => (
+              <TaskItem
+                key={taskItem.id}
+                title={taskItem.title}
+                priority={taskItem.priority}
+                completed={taskItem.completed}
+                onToggle={() => {
+                  setTasks(
+                    tasks.map((item) =>
+                      item.id === taskItem.id
+                        ? { ...item, completed: !item.completed }
+                        : item
+                    )
+                  );
+                }}
+              />
+            ))}
         </div>
       </div>
       <div className="goals-section">
