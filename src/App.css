@@ -22,6 +22,7 @@
 
 .dashboard {
   padding: 32px;
+  max-width: 1100px;
 }
 
 .dashboard-header h1 {
@@ -35,7 +36,7 @@
 .stats {
   display: flex;
   gap: 16px;
-  margin-top: 32px;
+  margin-bottom: 32px;
 }
 
 .stat-card {
@@ -43,14 +44,26 @@
   padding: 20px;
   border-radius: 12px;
   width: 200px;
+  border: 1px solid #374151;
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-2px);
+  border-color: #4b5563;
 }
 
 .stat-card h3 {
-  margin: 0 0 8px;
+  margin: 0 0 10px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #9ca3af;
 }
 
 .stat-card p {
   margin: 0;
+  font-size: 20px;
+  font-weight: 600;
 }
 
 .tasks-section {
@@ -271,4 +284,17 @@
   border: none;
   color: #f87171;
   cursor: pointer;
+}
+
+.dashboard-header {
+  margin-bottom: 32px;
+}
+
+.dashboard-header h1 {
+  font-size: 2rem;
+  margin-bottom: 8px;
+}
+
+.dashboard-header p {
+  color: #9ca3af;
 }
