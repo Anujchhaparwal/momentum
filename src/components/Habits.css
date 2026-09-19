@@ -1,0 +1,60 @@
+.habits-page {
+  padding: 32px;
+}
+
+.habit-input {
+  display: flex;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.habit-input input {
+  width: 400px;
+  padding: 12px;
+  border-radius: 8px;
+  border: none;
+}
+
+.habit-input button {
+  padding: 12px 20px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  background-color: #6366f1;
+  color: white;
+  font-weight: 600;
+}
+
+.habits-page h2 {
+  margin-top: 32px;
+}
+
+.habit-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.habit-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #1f2937;
+  padding: 16px;
+  border-radius: 8px;
+  max-width: 700px;
+}
+
+.habit-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.habit-item button {
+  background: transparent;
+  border: none;
+  color: #f87171;
+  cursor: pointer;
+}

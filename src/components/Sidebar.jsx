@@ -1,3 +1,5 @@
+import "./Sidebar.css"
+
 function Sidebar({ setActivePage }) {
   return (
     <div className="sidebar">

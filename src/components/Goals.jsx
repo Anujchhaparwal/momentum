@@ -1,4 +1,5 @@
 import { useState } from "react";
+import "./Goals.css"
 
 
 function Goals({ goals, setGoals }) {
@@ -7,6 +8,9 @@ function Goals({ goals, setGoals }) {
   return (
     <div className="goals-page">
       <h1>Goals</h1>
+      <p className="page-description">
+        Set goals and track your progress.
+      </p>
       <div className="goal-input">
         <input
           placeholder="Add a new goal..."
@@ -34,14 +38,17 @@ function Goals({ goals, setGoals }) {
         </button>
       </div>
 
-      <h2>Active Goals</h2>
+      <h2>My Goals</h2>
       <div className="goal-list">
         {goals.length === 0 ? (
           <p className="empty-state">No goals yet.</p>
         ) : (
 
           goals.map((goalItem) => (
-            <div className="goal-item" key={goalItem.id}>
+            <div
+              className={`goal-item ${goalItem.completed ? "goal-completed" : ""}`}
+              key={goalItem.id}
+            >
               <div className="goal-details">
                 <span className={goalItem.completed ? "completed" : ""}>
                   {goalItem.title}
@@ -52,6 +59,10 @@ function Goals({ goals, setGoals }) {
                     className="progress-fill"
                     style={{ width: `${goalItem.progress}%` }}
                   ></div>
+                </div>
+                <div className="progress-label">
+                  <span>Progress</span>
+                  <span>{goalItem.progress}%</span>
                 </div>
                 <input
                   type="range"
@@ -74,7 +85,6 @@ function Goals({ goals, setGoals }) {
                 />
               </div>
 
-              <span className="goal-progress">{goalItem.progress}%</span>
 
               <button
                 onClick={() => {
@@ -87,7 +97,7 @@ function Goals({ goals, setGoals }) {
               </button>
             </div>
           ))
-        ) }
+        )}
       </div>
     </div>
   );

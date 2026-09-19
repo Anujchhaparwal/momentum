@@ -1,4 +1,5 @@
 import { useState } from "react";
+import "./Habits.css"
 
 function Habits({ habits, setHabits }) {
   const [habit, setHabit] = useState("");

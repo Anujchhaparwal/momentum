@@ -1,5 +1,6 @@
 import StatCard from "./statCard";
 import TaskItem from "./TaskItem";
+import "./Dashboard.css";
 
 function Dashboard({ tasks, setTasks, goals, habits }) {
 

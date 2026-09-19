@@ -5,7 +5,7 @@ import Tasks from "./components/Tasks";
 import Goals from "./components/Goals";
 import { useState, useEffect } from "react";
 import Habits from "./components/Habits";
-
+import "./styles/shared.css"
 function App() {
   const [activePage, setActivePage] = useState("Dashboard");
   const [tasks, setTasks] = useState(() => {

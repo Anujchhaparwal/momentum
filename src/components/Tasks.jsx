@@ -1,4 +1,5 @@
 import { useState } from "react";
+import "./Tasks.css";
 
 function Tasks({ tasks, setTasks }) {
   const [task, setTask] = useState("");
@@ -6,6 +7,10 @@ function Tasks({ tasks, setTasks }) {
   return (
     <div className="tasks-page">
       <h1>Tasks</h1>
+
+      <p className="page-description">
+        Organize what needs to get done.
+      </p>
 
       <div className="task-input">
         <input placeholder="Add a new task..."
@@ -38,41 +43,46 @@ function Tasks({ tasks, setTasks }) {
         >Add</button>
       </div>
 
-      <h2>Today's Tasks</h2>
+      <h2>My Tasks</h2>
 
       <div className="task-list">
-        {tasks.map((taskItem) => (
-          <div className="task-item" key={taskItem.id}>
-            <div className="task-info">
-              <input
-                type="checkbox"
-                checked={taskItem.completed}
-                onChange={() => {
-                  setTasks(
-                    tasks.map((item) =>
-                      item.id === taskItem.id
-                        ? { ...item, completed: !item.completed }
-                        : item
-                    )
-                  );
-                }}
-              />
-              <span className={taskItem.completed ? "completed" : ""}>
-                {taskItem.title}
-              </span>
-            </div>
+        {tasks.length === 0 ? (
+          <p className="empty-state">No tasks yet.</p>
+        ) : (
+          
+            tasks.map((taskItem) => (
+              <div className="task-item" key={taskItem.id}>
+                <div className="task-info">
+                  <input
+                    type="checkbox"
+                    checked={taskItem.completed}
+                    onChange={() => {
+                      setTasks(
+                        tasks.map((item) =>
+                          item.id === taskItem.id
+                            ? { ...item, completed: !item.completed }
+                            : item
+                        )
+                      );
+                    }}
+                  />
+                  <span className={taskItem.completed ? "completed" : ""}>
+                    {taskItem.title}
+                  </span>
+                </div>
 
-            <span className={`priority ${taskItem.priority.toLowerCase()}`}>
-              {taskItem.priority}
-            </span>
-            <button onClick={() => {
-              setTasks(tasks.filter((item) => item.id !== taskItem.id));
-            }}>
-              Delete
-            </button>
-          </div >
+                <span className={`priority ${taskItem.priority.toLowerCase()}`}>
+                  {taskItem.priority}
+                </span>
+                <button onClick={() => {
+                  setTasks(tasks.filter((item) => item.id !== taskItem.id));
+                }}>
+                  Delete
+                </button>
+              </div >
 
-        ))}
+            ))
+          )}
 
       </div>
     </div >
