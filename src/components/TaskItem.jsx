@@ -1,4 +1,5 @@
 function TaskItem({ title, priority, completed, onToggle }) {
+  
   return (
     <div className="task-item">
       <div className="task-info">

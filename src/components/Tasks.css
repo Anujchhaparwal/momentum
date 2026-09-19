@@ -80,6 +80,20 @@
   gap: 10px;
 }
 
+.task-item .task-info input[type="text"] {
+  width: 300px;
+  padding: 8px 10px;
+  border-radius: 6px;
+  border: 1px solid #374151;
+  background-color: #111827;
+  color: white;
+  outline: none;
+}
+
+.task-item .task-info input[type="text"]:focus {
+  border-color: #6366f1;
+}
+
 .priority {
   padding: 4px 8px;
   border-radius: 6px;
