@@ -4,6 +4,8 @@ import "./Goals.css"
 
 function Goals({ goals, setGoals }) {
   const [goal, setGoal] = useState("");
+  const [editingGoalId, setEditingGoalId] = useState(null);
+  const [editedTitle, setEditedTitle] = useState("");
 
   return (
     <div className="goals-page">
@@ -50,9 +52,18 @@ function Goals({ goals, setGoals }) {
               key={goalItem.id}
             >
               <div className="goal-details">
-                <span className={goalItem.completed ? "completed" : ""}>
-                  {goalItem.title}
-                </span>
+                {editingGoalId === goalItem.id ? (
+                  <input
+                    type="text"
+                    value={editedTitle}
+                    onChange={(event) => setEditedTitle(event.target.value)}
+                    autoFocus
+                  />
+                ) : (
+                  <span className={goalItem.completed ? "completed" : ""}>
+                    {goalItem.title}
+                  </span>
+                )}
 
                 <div className="progress-bar">
                   <div
@@ -86,15 +97,58 @@ function Goals({ goals, setGoals }) {
               </div>
 
 
-              <button
-                onClick={() => {
-                  setGoals(
-                    goals.filter((item) => item.id !== goalItem.id)
-                  );
-                }}
-              >
-                Delete
-              </button>
+              {editingGoalId === goalItem.id ? (
+                <>
+                  <button
+                    onClick={() => {
+                      if (!editedTitle.trim()) return;
+
+                      setGoals(
+                        goals.map((item) =>
+                          item.id === goalItem.id
+                            ? { ...item, title: editedTitle.trim() }
+                            : item
+                        )
+                      );
+
+                      setEditingGoalId(null);
+                      setEditedTitle("");
+                    }}
+                  >
+                    Save
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      setEditingGoalId(null);
+                      setEditedTitle("");
+                    }}
+                  >
+                    Cancel
+                  </button>
+                </>
+              ) : (
+                <>
+                  <button
+                    onClick={() => {
+                      setEditingGoalId(goalItem.id);
+                      setEditedTitle(goalItem.title);
+                    }}
+                  >
+                    Edit
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      setGoals(
+                        goals.filter((item) => item.id !== goalItem.id)
+                      );
+                    }}
+                  >
+                    Delete
+                  </button>
+                </>
+              )}
             </div>
           ))
         )}
