@@ -1,9 +1,44 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./Habits.css"
+
+const getToday = () => {
+  const date = new Date();
+
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(
+    date.getDate()
+  ).padStart(2, "0")}`;
+};
 
 function Habits({ habits, setHabits }) {
   const [habit, setHabit] = useState("");
-  
+
+  useEffect(() => {
+    const today = getToday();
+
+    const updatedHabits = habits.map((item) => {
+      if (
+        item.completed &&
+        item.lastCompletedDate !== today
+      ) {
+        return {
+          ...item,
+          completed: false,
+        };
+      }
+
+      return item;
+    });
+
+    const hasChanged = updatedHabits.some(
+      (item, index) =>
+        item.completed !== habits[index].completed
+    );
+
+    if (hasChanged) {
+      setHabits(updatedHabits);
+    }
+  }, [habits, setHabits]);
+
   return (
     <div className="habits-page">
       <h1>Habits</h1>
@@ -24,7 +59,8 @@ function Habits({ habits, setHabits }) {
                 id: Date.now(),
                 title: habit,
                 completed: false,
-                streak: 0
+                streak: 0,
+                lastCompletedDate: null,
               },
             ]);
 
@@ -43,18 +79,37 @@ function Habits({ habits, setHabits }) {
                 type="checkbox"
                 checked={habitItem.completed}
                 onChange={() => {
+                  const today = getToday();
+
                   setHabits(
-                    habits.map((item) =>
-                      item.id === habitItem.id
-                        ? {
+                    habits.map((item) => {
+                      if (item.id !== habitItem.id) return item;
+
+                      if (item.completed) {
+                        return {
                           ...item,
-                          completed: !item.completed,
-                          streak: item.completed
-                            ? item.streak - 1
-                            : item.streak + 1,
-                        }
-                        : item
-                    )
+                          completed: false,
+                        };
+                      }
+
+                      const yesterday = new Date();
+                      yesterday.setDate(yesterday.getDate() - 1);
+                      const yesterdayString = yesterday
+                        .toISOString()
+                        .split("T")[0];
+
+                      const newStreak =
+                        item.lastCompletedDate === yesterdayString
+                          ? item.streak + 1
+                          : 1;
+
+                      return {
+                        ...item,
+                        completed: true,
+                        streak: newStreak,
+                        lastCompletedDate: today,
+                      };
+                    })
                   );
                 }}
               />
