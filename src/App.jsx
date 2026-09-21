@@ -6,6 +6,7 @@ import Goals from "./components/Goals";
 import { useState, useEffect } from "react";
 import Habits from "./components/Habits";
 import "./styles/shared.css"
+import Finances from "./components/Finances"
 function App() {
   const [activePage, setActivePage] = useState("Dashboard");
   const [tasks, setTasks] = useState(() => {
@@ -16,6 +17,9 @@ function App() {
   });
   const [habits, setHabits] = useState(() => {
     return JSON.parse(localStorage.getItem("habits")) || [];
+  });
+  const [transactions, setTransactions] = useState(() => {
+    return JSON.parse(localStorage.getItem("transactions")) || [];
   });
 
   useEffect(() => {
@@ -29,6 +33,9 @@ function App() {
   useEffect(() => {
     localStorage.setItem("habits", JSON.stringify(habits));
   }, [habits]);
+  useEffect(() => {
+    localStorage.setItem("transactions", JSON.stringify(transactions));
+  }, [transactions]);
 
   return (
     <div className="app">
@@ -43,7 +50,7 @@ function App() {
 
         {activePage === "Habits" && <Habits habits={habits} setHabits={setHabits} />}
 
-        {activePage === "Finances" && <h1>Finances</h1>}
+        {activePage === "Finances" && <Finances transactions={transactions} setTransactions={setTransactions} />}
 
         {activePage === "Analytics" && <h1>Analytics</h1>}
       </main>
