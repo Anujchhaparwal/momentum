@@ -1,4 +1,4 @@
-import StatCard from "./statCard";
+import StatCard from "./StatCard";
 import TaskItem from "./TaskItem";
 import "./Dashboard.css";
 
