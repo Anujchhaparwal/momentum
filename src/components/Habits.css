@@ -58,3 +58,40 @@
   color: #f87171;
   cursor: pointer;
 }
+
+@media (max-width: 768px) {
+  .habits-page {
+    padding: 20px;
+  }
+
+  .habit-input {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .habit-input input {
+    width: auto;
+  }
+
+  .habit-input button {
+    width: 100%;
+  }
+
+  .habit-item {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .habit-info {
+    min-width: 0;
+    flex: 1;
+  }
+
+  .habit-info span {
+    overflow-wrap: anywhere;
+  }
+
+  .habit-streak {
+    white-space: nowrap;
+  }
+}

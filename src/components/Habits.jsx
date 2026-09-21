@@ -99,9 +99,11 @@ function Habits({ habits, setHabits }) {
                         .split("T")[0];
 
                       const newStreak =
-                        item.lastCompletedDate === yesterdayString
-                          ? item.streak + 1
-                          : 1;
+                        item.lastCompletedDate === today
+                          ? item.streak
+                          : item.lastCompletedDate === yesterdayString
+                            ? item.streak + 1
+                            : 1;
 
                       return {
                         ...item,

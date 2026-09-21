@@ -1,3 +1,9 @@
 .app {
   display: flex;
 }
+
+@media (max-width: 768px) {
+  .app {
+    flex-direction: column;
+  }
+}
