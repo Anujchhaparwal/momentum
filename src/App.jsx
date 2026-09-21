@@ -6,7 +6,8 @@ import Goals from "./components/Goals";
 import { useState, useEffect } from "react";
 import Habits from "./components/Habits";
 import "./styles/shared.css"
-import Finances from "./components/Finances"
+import Finances from "./components/Finances";
+import Analytics from "./components/Analytics";
 function App() {
   const [activePage, setActivePage] = useState("Dashboard");
   const [tasks, setTasks] = useState(() => {
@@ -52,7 +53,8 @@ function App() {
 
         {activePage === "Finances" && <Finances transactions={transactions} setTransactions={setTransactions} />}
 
-        {activePage === "Analytics" && <h1>Analytics</h1>}
+        {activePage === "Analytics" && <Analytics tasks={tasks} goals={goals} habits={habits} 
+        transactions={transactions} />}
       </main>
     </div>
   );
