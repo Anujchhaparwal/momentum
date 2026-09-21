@@ -3,7 +3,7 @@ import "./Tasks.css";
 
 function Tasks({ tasks, setTasks }) {
   const [task, setTask] = useState("");
-  const [priority, setPriority] = useState("Medium");
+  const [priority, setPriority] = useState("");
   const [editingTaskId, setEditingTaskId] = useState(null);
   const [editedTitle, setEditedTitle] = useState("");
   return (
@@ -24,6 +24,7 @@ function Tasks({ tasks, setTasks }) {
           value={priority}
           onChange={(event) => setPriority(event.target.value)}
         >
+          <option value="" disabled>Priority</option>
           <option value="Low">Low</option>
           <option value="Medium">Medium</option>
           <option value="High">High</option>
@@ -40,7 +41,7 @@ function Tasks({ tasks, setTasks }) {
           },
           ])
           setTask("");
-          setPriority("Medium");
+          setPriority("");
         }}
         >Add</button>
       </div>
@@ -70,7 +71,7 @@ function Tasks({ tasks, setTasks }) {
                 />
                 {editingTaskId === taskItem.id ? (
                   <input
-                    type = "text"
+                    type="text"
                     value={editedTitle}
                     onChange={(event) => setEditedTitle(event.target.value)}
                     autoFocus
@@ -82,9 +83,13 @@ function Tasks({ tasks, setTasks }) {
                 )}
               </div>
 
-              <span className={`priority ${taskItem.priority.toLowerCase()}`}>
-                {taskItem.priority}
-              </span>
+              <div className="priority_slot">
+                {taskItem.priority && (
+                  <span className={`priority ${taskItem.priority.toLowerCase()}`}>
+                    {taskItem.priority}
+                  </span>
+                )}
+              </div>
               {editingTaskId === taskItem.id ? (
                 <>
                   <button

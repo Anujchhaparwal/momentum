@@ -111,6 +111,12 @@
   color: #4ade80;
 }
 
+.priority_slot {
+  width: 90px;
+  display: flex;
+  justify-content: center;
+}
+
 .completed {
   text-decoration: line-through;
   opacity: 0.6;
