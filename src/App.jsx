@@ -40,8 +40,7 @@ function App() {
 
   return (
     <div className="app">
-      <Sidebar setActivePage={setActivePage} />
-
+      <Sidebar activePage={activePage} setActivePage={setActivePage} />
       <main>
         {activePage === "Dashboard" && <Dashboard setTasks={setTasks} tasks={tasks} goals={goals} habits={habits} />}
 
@@ -53,8 +52,8 @@ function App() {
 
         {activePage === "Finances" && <Finances transactions={transactions} setTransactions={setTransactions} />}
 
-        {activePage === "Analytics" && <Analytics tasks={tasks} goals={goals} habits={habits} 
-        transactions={transactions} />}
+        {activePage === "Analytics" && <Analytics tasks={tasks} goals={goals} habits={habits}
+          transactions={transactions} />}
       </main>
     </div>
   );

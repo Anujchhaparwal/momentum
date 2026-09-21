@@ -2,8 +2,22 @@
   display: flex;
 }
 
+main {
+  flex: 1;
+  padding: 32px;
+}
+
+.page-description {
+  color: #9ca3af;
+  margin-top: 8px;
+}
+
 @media (max-width: 768px) {
   .app {
     flex-direction: column;
+  }
+
+  main {
+    padding: 20px;
   }
 }
