@@ -111,7 +111,7 @@
   color: #4ade80;
 }
 
-.priority_slot {
+.priority-slot {
   width: 90px;
   display: flex;
   justify-content: center;
@@ -156,14 +156,16 @@
   }
 
   .task-item {
-    max-width: none;
-    flex-wrap: wrap;
-    gap: 12px;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    gap: 10px;
+    align-items: center;
   }
 
   .task-info {
+    grid-column: 1 / -1;
     min-width: 0;
-    flex: 1;
+    width: 100%;
   }
 
   .task-info span {
