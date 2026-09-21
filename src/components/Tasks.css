@@ -167,6 +167,8 @@
   }
 
   .task-info span {
+    min-width: 0;
+    flex: 1;
     overflow-wrap: anywhere;
   }
 
