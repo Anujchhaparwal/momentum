@@ -84,7 +84,7 @@ function Tasks({ tasks, setTasks }) {
                 )}
               </div>
 
-              <div className="priority_slot">
+              <div className="priority-slot">
                 {editingTaskId === taskItem.id ? (
                   <select
                     value={editedPriority}

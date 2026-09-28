@@ -117,6 +117,21 @@
   justify-content: center;
 }
 
+.priority-slot select {
+  width: 90px;
+  padding: 6px 8px;
+  border-radius: 6px;
+  border: 1px solid #374151;
+  background-color: #111827;
+  color: white;
+  cursor: pointer;
+  outline: none;
+}
+
+.priority-slot select:focus {
+  border-color: #6366f1;
+}
+
 .completed {
   text-decoration: line-through;
   opacity: 0.6;
