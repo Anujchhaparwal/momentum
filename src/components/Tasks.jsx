@@ -6,6 +6,7 @@ function Tasks({ tasks, setTasks }) {
   const [priority, setPriority] = useState("");
   const [editingTaskId, setEditingTaskId] = useState(null);
   const [editedTitle, setEditedTitle] = useState("");
+  const [editedPriority, setEditedPriority] = useState("");
   return (
     <div className="tasks-page">
       <h1>Tasks</h1>
@@ -84,10 +85,22 @@ function Tasks({ tasks, setTasks }) {
               </div>
 
               <div className="priority_slot">
-                {taskItem.priority && (
-                  <span className={`priority ${taskItem.priority.toLowerCase()}`}>
-                    {taskItem.priority}
-                  </span>
+                {editingTaskId === taskItem.id ? (
+                  <select
+                    value={editedPriority}
+                    onChange={(event) => setEditedPriority(event.target.value)}
+                  >
+                    <option value="">No priority</option>
+                    <option value="Low">Low</option>
+                    <option value="Medium">Medium</option>
+                    <option value="High">High</option>
+                  </select>
+                ) : (
+                  taskItem.priority && (
+                    <span className={`priority ${taskItem.priority.toLowerCase()}`}>
+                      {taskItem.priority}
+                    </span>
+                  )
                 )}
               </div>
               {editingTaskId === taskItem.id ? (
@@ -99,13 +112,19 @@ function Tasks({ tasks, setTasks }) {
                       setTasks(
                         tasks.map((item) =>
                           item.id === taskItem.id
-                            ? { ...item, title: editedTitle.trim() }
-                            : item
+                            ? {
+                              ...item,
+                              title: editedTitle.trim(),
+                              priority: editedPriority,
+                            }
+                              : item
                         )
                       );
 
                       setEditingTaskId(null);
                       setEditedTitle("");
+                      setEditedPriority("");
+                      
                     }}
                   >
                     Save
@@ -115,6 +134,7 @@ function Tasks({ tasks, setTasks }) {
                     onClick={() => {
                       setEditingTaskId(null);
                       setEditedTitle("");
+                      setEditedPriority("");
                     }}
                   >
                     Cancel
@@ -126,6 +146,7 @@ function Tasks({ tasks, setTasks }) {
                     onClick={() => {
                       setEditingTaskId(taskItem.id);
                       setEditedTitle(taskItem.title);
+                      setEditedPriority(taskItem.priority || "");
                     }}
                   >
                     Edit
