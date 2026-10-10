@@ -106,6 +106,7 @@ function Tasks({ tasks, setTasks }) {
               {editingTaskId === taskItem.id ? (
                 <>
                   <button
+                    className="edit-button"
                     onClick={() => {
                       if (!editedTitle.trim()) return;
 
@@ -131,6 +132,7 @@ function Tasks({ tasks, setTasks }) {
                   </button>
 
                   <button
+                    className="edit-button"
                     onClick={() => {
                       setEditingTaskId(null);
                       setEditedTitle("");
@@ -143,6 +145,7 @@ function Tasks({ tasks, setTasks }) {
               ) : (
                 <>
                   <button
+                    className="edit-button"
                     onClick={() => {
                       setEditingTaskId(taskItem.id);
                       setEditedTitle(taskItem.title);
@@ -153,6 +156,7 @@ function Tasks({ tasks, setTasks }) {
                   </button>
 
                   <button
+                    className="delete-button"
                     onClick={() => {
                       setTasks(
                         tasks.filter((item) => item.id !== taskItem.id)

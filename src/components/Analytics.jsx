@@ -96,7 +96,7 @@ function Analytics({ tasks, goals, habits, transactions }) {
           {topCategory ? (
             <p>
               Biggest spending category:{" "}
-              <strong>{topCategory[0]}</strong>{" "}
+              <strong className="cat-strong">{topCategory[0]}</strong>{" "}
               (₹{topCategory[1].toLocaleString()})
             </p>
           ) : (

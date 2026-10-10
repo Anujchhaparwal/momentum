@@ -1,14 +1,19 @@
 .app {
   display: flex;
+  min-height: 100vh;
 }
 
 main {
   flex: 1;
+  min-width: 0;
+  min-height: 100vh;
   padding: 32px;
+  background-color: #F3EEE5;
+  color: #292820;
 }
 
 .page-description {
-  color: #9ca3af;
+  color: #62594D;
   margin-top: 8px;
 }
 

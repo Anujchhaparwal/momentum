@@ -2,6 +2,10 @@
   padding: 32px;
 }
 
+.goals-page p {
+  color: #62594D;
+}
+
 .goal-input {
   display: flex;
   gap: 12px;
@@ -12,17 +16,38 @@
   width: 400px;
   padding: 12px;
   border-radius: 8px;
-  border: none;
+  border: 1px solid #D6C8B5;
+  background-color: #FFFCF7;
+  color: #292820;
+  outline: none;
+}
+
+.goal-input input::placeholder {
+  color: #8A8176;
+  opacity: 1;
+}
+
+.goal-input input:focus {
+  border-color: #4b5563;
 }
 
 .goal-input button {
   padding: 12px 20px;
   border-radius: 8px;
-  border: none;
+  border: 1px solid #D6C8B5;
   cursor: pointer;
-  background-color: #6366f1;
-  color: white;
+  background-color: #292820;
+  color: #FFFFFF;
   font-weight: 600;
+  transition: background-color 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.goal-input button:hover {
+  background-color: #FFFCF7;
+  border-color: #C4B49D;
+  color: #292820;
 }
 
 .goals-page h2 {
@@ -40,10 +65,12 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #1f2937;
+  background-color: #E8DFD1;
+  color: #292820;
   padding: 16px;
   border-radius: 8px;
   max-width: 700px;
+  border: 1px solid #D6C8B5;
 }
 
 .goal-details {
@@ -53,7 +80,7 @@
 
 .progress-bar {
   height: 8px;
-  background-color: #374151;
+  background-color: #D0C1AD;
   border-radius: 4px;
   margin-top: 8px;
   overflow: hidden;
@@ -61,7 +88,7 @@
 
 .progress-fill {
   height: 100%;
-  background-color: #6366f1;
+  background-color: #111827;
   border-radius: 4px;
 }
 
@@ -71,32 +98,43 @@
   margin-top: 10px;
   margin-bottom: 4px;
   font-size: 13px;
-  color: #9ca3af;
+  color: #62594D;
 }
 
 .goal-completed {
   opacity: 0.7;
 }
 
-.goal-item button {
-  background: transparent;
-  border: 1px solid #374151;
-  color: #f87171;
+.goal-item .edit-button,
+.goal-item .delete-button {
+  background-color: #F3EEE5;
+  border: 1px solid #D6C8B5;
   padding: 6px 10px;
   border-radius: 6px;
   cursor: pointer;
-  transition: background-color 0.2s ease;
+  transition: background-color 0.2s ease,
+    border-color 0.2s ease;
   margin-right: 5px;
 }
 
-.goal-item button:hover {
-  background-color: #374151;
+.goal-item .edit-button {
+  color: #292820;
+}
+
+.goal-item .delete-button {
+  color: #B45353;
+}
+
+.goal-item .edit-button:hover,
+.goal-item .delete-button:hover {
+  background-color: #FFFCF7;
+  border-color: #C4B49D;
 }
 
 .goal-details input[type="range"] {
   width: 180px;
   height: 6px;
-  accent-color: #6366f1;
+  accent-color: #111827;
   cursor: pointer;
 }
 
@@ -104,14 +142,14 @@
   width: 300px;
   padding: 8px 10px;
   border-radius: 6px;
-  border: 1px solid #374151;
-  background-color: #111827;
-  color: white;
+  border: 1px solid #D6C8B5;
+  background-color: #FFFCF7;
+  color: #292820;
   outline: none;
 }
 
 .goal-details input[type="text"]:focus {
-  border-color: #6366f1;
+  border-color: #4b5563;
 }
 
 @media (max-width: 768px) {

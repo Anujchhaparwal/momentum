@@ -7,6 +7,10 @@
   margin-top: 32px;
 }
 
+.finance-page p {
+  color: #62594D;
+}
+
 .finance-summary {
   display: flex;
   gap: 16px;
@@ -14,24 +18,31 @@
 }
 
 .finance-card {
-  background-color: #1f2937;
+  background-color: #e8dfd0;
   padding: 20px;
   border-radius: 12px;
   width: 200px;
-  border: 1px solid #374151;
+  border: 1px solid #d8c9b5;
+  transition: border-color 0.2s ease, transform 0.2s ease;
+}
+
+.finance-card:hover {
+  transform: translateY(-2px);
+  border-color: #C4B49D;
 }
 
 .finance-card h3 {
   margin: 0 0 10px;
   font-size: 14px;
   font-weight: 500;
-  color: #9ca3af;
+  color: #625946;
 }
 
 .finance-card p {
   margin: 0;
   font-size: 20px;
   font-weight: 600;
+  color: #292820;
 }
 
 .transaction-input {
@@ -46,25 +57,46 @@
 .transaction-input select {
   padding: 12px;
   border-radius: 8px;
-  border: 1px solid #374151;
-  background-color: #1f2937;
-  color: white;
+  border: 1px solid #d8c9b5;
+  background-color: #fffcf7;
   outline: none;
+}
+
+.transaction-input input {
+   color: #292820;
+}
+
+.transaction-input select {
+  color: #8A8176;
+}
+
+.transaction-input input::placeholder {
+  color: #8A8176;
+  opacity: 1;
 }
 
 .transaction-input input:focus,
 .transaction-input select:focus {
-  border-color: #6366f1;
+  border-color: #4b5563;
 }
 
 .transaction-input button {
   padding: 12px 20px;
   border-radius: 8px;
-  border: none;
+  border: 1px solid #D6C8B5;
   cursor: pointer;
-  background-color: #6366f1;
-  color: white;
+  background-color: #292820;
+  color: #FFFFFF;
   font-weight: 600;
+  transition: background-color 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.transaction-input button:hover {
+  background-color: #FFFCF7;
+  border-color: #C4B49D;
+  color: #292820;
 }
 
 .transaction-list {
@@ -80,13 +112,15 @@
   gap: 20px;
   max-width: 800px;
   padding: 16px;
-  background-color: #1f2937;
-  border: 1px solid transparent;
-  border-radius: 8px;
+  background-color: #e8dfd0;
+  border: 1px solid #d8c9b5;
+  border-radius: 10px;
+  color: #292820;
+  transition: border-color 0.2s ease;
 }
 
 .transaction-item:hover {
-  border-color: #4b5563;
+  border-color: #C4B49D;
 }
 
 .transaction-item div {
@@ -94,24 +128,28 @@
   flex-direction: column;
   gap: 4px;
   flex: 1;
+  min-width: 0;
 }
 
 .transaction-item div span {
-  color: #9ca3af;
+  color: #526174;
   font-size: 13px;
 }
 
 .transaction-item button {
-  background: transparent;
-  border: 1px solid #374151;
-  color: #f87171;
+  background-color: #F3EEE5;
+  border: 1px solid #D6C8B5;
+  color: #b45353;
   padding: 6px 10px;
   border-radius: 6px;
   cursor: pointer;
+  transition: background-color 0.2s ease,
+    border-color 0.2s ease;
 }
 
 .transaction-item button:hover {
-  background-color: #374151;
+  background-color: #FFFCF7;
+  border-color: #C4B49D;
 }
 
 @media (max-width: 768px) {

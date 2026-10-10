@@ -100,6 +100,7 @@ function Goals({ goals, setGoals }) {
               {editingGoalId === goalItem.id ? (
                 <>
                   <button
+                    className="edit-button"
                     onClick={() => {
                       if (!editedTitle.trim()) return;
 
@@ -119,6 +120,7 @@ function Goals({ goals, setGoals }) {
                   </button>
 
                   <button
+                    className="edit-button"
                     onClick={() => {
                       setEditingGoalId(null);
                       setEditedTitle("");
@@ -130,6 +132,7 @@ function Goals({ goals, setGoals }) {
               ) : (
                 <>
                   <button
+                    className="edit-button"
                     onClick={() => {
                       setEditingGoalId(goalItem.id);
                       setEditedTitle(goalItem.title);
@@ -139,6 +142,7 @@ function Goals({ goals, setGoals }) {
                   </button>
 
                   <button
+                    className="delete-button"
                     onClick={() => {
                       setGoals(
                         goals.filter((item) => item.id !== goalItem.id)

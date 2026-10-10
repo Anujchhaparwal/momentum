@@ -42,7 +42,7 @@ function App() {
     <div className="app">
       <Sidebar activePage={activePage} setActivePage={setActivePage} />
       <main>
-        {activePage === "Dashboard" && <Dashboard setTasks={setTasks} tasks={tasks} goals={goals} habits={habits} />}
+        {activePage === "Dashboard" && <Dashboard setTasks={setTasks} tasks={tasks} goals={goals} habits={habits} setActivePage={setActivePage} />}
 
         {activePage === "Tasks" && <Tasks tasks={tasks} setTasks={setTasks} />}
 
