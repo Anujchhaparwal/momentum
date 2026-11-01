@@ -1,7 +1,8 @@
 import "dotenv/config";
+import process from "node:process";
 import express from "express";
 import cors from "cors";
-import process from "node:process";
+import connectDB from "./config/db.js";
 
 const app = express();
 
@@ -15,13 +16,19 @@ app.use(express.json());
 // Test route
 app.get("/", (req, res) => {
   res.status(200).json({
-    message: "Momentum backend is running!"
+    message: "Momentum backend is running!",
   });
 });
 
-// Start server
-const PORT = process.env.PORT || 5000;
+// Connect database and start server
+const startServer = async () => {
+  await connectDB();
 
-app.listen(PORT, () => {
-  console.log(`Momentum server running on port ${PORT}`);
-});
+  const PORT = process.env.PORT || 5000;
+
+  app.listen(PORT, () => {
+    console.log(`Momentum server running on port ${PORT}`);
+  });
+};
+
+startServer();
