@@ -64,10 +64,8 @@ export const registerUser = async (req, res) => {
 
     const hashedPassword = await bcrypt.hash(password, 12);
 
-    // Generate email verification token
     const verificationToken = crypto.randomBytes(32).toString("hex");
 
-    // Hash the token before storing it
     const hashedToken = crypto
       .createHash("sha256")
       .update(verificationToken)
@@ -165,6 +163,63 @@ export const verifyEmail = async (req, res) => {
 
     return res.status(500).json({
       message: "Something went wrong during email verification",
+    });
+  }
+};
+
+export const resendVerification = async (req, res) => {
+  try {
+    const { email } = req.body || {};
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (email.trim().length > 254 || !emailRegex.test(email.trim())) {
+      return res.status(400).json({
+        message: "Please provide a valid email address",
+      });
+    }
+
+    const normalizedEmail = email.trim().toLowerCase();
+
+    const user = await User.findOne({
+      email: normalizedEmail,
+    });
+
+    if (!user || user.isVerified) {
+      return res.status(200).json({
+        message: "If an unverified account exists for this email, a new verification link will be sent.",
+      });
+    }
+    const verificationToken = crypto.randomBytes(32).toString("hex");
+
+    const hashedToken = crypto
+      .createHash("sha256")
+      .update(verificationToken)
+      .digest("hex");
+
+    const verificationUrl = `${process.env.FRONTEND_URL}/verify-email?token=${verificationToken}`;
+
+    user.verificationToken = hashedToken;
+    user.verificationTokenExpires = Date.now() + 15 * 60 * 1000;
+
+    await user.save();
+
+    await sendEmail(
+      normalizedEmail,
+      "Verify Your Momentum Account",
+      verificationEmail(user.name, verificationUrl)
+    );
+
+    return res.status(200).json({
+      message: "If an unverified account exists for this email, a new verification link will be sent.",
+    });
+
+
+  } catch (error) {
+    console.error("Resend verification error:", error);
+
+    return res.status(500).json({
+      message: "Something went wrong while resending the verification email",
     });
   }
 };
