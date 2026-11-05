@@ -4,6 +4,7 @@ import express from "express";
 import cors from "cors";
 import connectDB from "./config/db.js";
 import authRouter from "./routes/auth.route.js";
+import { verifyEmailConnection } from "./utils/sendEmail.js";
 
 const app = express();
 
@@ -26,6 +27,8 @@ app.get("/", (req, res) => {
 // Connect database and start server
 const startServer = async () => {
   await connectDB();
+  await verifyEmailConnection();
+
 
   const PORT = process.env.PORT || 5000;
 

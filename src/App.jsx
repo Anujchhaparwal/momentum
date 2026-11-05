@@ -8,7 +8,10 @@ import Habits from "./components/Habits";
 import "./styles/shared.css"
 import Finances from "./components/Finances";
 import Analytics from "./components/Analytics";
-function App() {
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import VerifyEmail from "./pages/VerifyEmail";
+
+function DashboardApp() {
   const [activePage, setActivePage] = useState("Dashboard");
   const [tasks, setTasks] = useState(() => {
     return JSON.parse(localStorage.getItem("tasks")) || [];
@@ -56,6 +59,17 @@ function App() {
           transactions={transactions} />}
       </main>
     </div>
+  );
+}
+
+function App() {
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<DashboardApp />} />
+        <Route path="/verify-email" element={<VerifyEmail />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 
