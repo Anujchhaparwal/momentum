@@ -6,6 +6,7 @@ import connectDB from "./config/db.js";
 import authRouter from "./routes/auth.route.js";
 import { verifyEmailConnection } from "./utils/sendEmail.js";
 import taskRouter from "./routes/task.route.js";
+import goalRouter from "./routes/goal.route.js";
 
 const app = express();
 
@@ -18,6 +19,7 @@ app.use(express.json());
 
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/tasks", taskRouter);
+app.use("/api/v1/goals", goalRouter);
 
 // Test route
 app.get("/", (req, res) => {
