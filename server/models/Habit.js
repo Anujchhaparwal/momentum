@@ -19,7 +19,7 @@ const habitSchema = new mongoose.Schema(
       min: [0, "Streak cannot be negative"],
     },
     lastCompletedDate: {
-      type: Date,
+      type: String,
       default: null,
     },
     user: {
