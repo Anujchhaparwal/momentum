@@ -97,7 +97,7 @@ export const updateGoal = async (req, res) => {
         user: req.user.userId,
       },
       updates,
-      { new: true, runValidators: true }
+      { returnDocument: "after", runValidators: true }
     );
 
     if (!updatedGoal) {

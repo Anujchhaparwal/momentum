@@ -102,7 +102,7 @@ export const updateTask = async (req, res) => {
         user: req.user.userId,
       },
       updates,
-      { new: true, runValidators: true }
+      { returnDocument: "after", runValidators: true }
     );
 
     if (!updatedTask) {
