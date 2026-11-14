@@ -89,18 +89,40 @@ function Dashboard({ tasks, setTasks, goals, habits, setActivePage }) {
                   .slice(0, 5)
                   .map((taskItem) => (
                     <TaskItem
-                      key={taskItem.id}
+                      key={taskItem._id}
                       title={taskItem.title}
                       priority={taskItem.priority}
                       completed={taskItem.completed}
-                      onToggle={() => {
-                        setTasks(
-                          tasks.map((item) =>
-                            item.id === taskItem.id
-                              ? { ...item, completed: !item.completed }
-                              : item
-                          )
-                        );
+                      onToggle={async () => {
+                        try {
+                          const response = await fetch(
+                            `http://localhost:5000/api/v1/tasks/${taskItem._id}`,
+                            {
+                              method: "PATCH",
+                              headers: {
+                                "Content-Type": "application/json",
+                              },
+                              credentials: "include",
+                              body: JSON.stringify({
+                                completed: !taskItem.completed,
+                              }),
+                            }
+                          );
+
+                          const data = await response.json();
+
+                          if (!response.ok) {
+                            throw new Error(data.message || "Failed to update task");
+                          }
+
+                          setTasks((prevTasks) =>
+                            prevTasks.map((item) =>
+                              item._id === taskItem._id ? data.task : item
+                            )
+                          );
+                        } catch (error) {
+                          console.error("Task update failed:", error);
+                        }
                       }}
                     />
                   ))

@@ -1,5 +1,8 @@
+
 import { useState } from "react";
 import "./Tasks.css";
+
+const API_URL = "http://localhost:5000/api/v1";
 
 function Tasks({ tasks, setTasks }) {
   const [task, setTask] = useState("");
@@ -7,6 +10,108 @@ function Tasks({ tasks, setTasks }) {
   const [editingTaskId, setEditingTaskId] = useState(null);
   const [editedTitle, setEditedTitle] = useState("");
   const [editedPriority, setEditedPriority] = useState("");
+  const [error, setError] = useState("");
+  const [saving, setSaving] = useState(false);
+
+  // Add a new task
+  const addTask = async () => {
+    if (!task.trim()) return;
+
+    setError("");
+    setSaving(true);
+
+    try {
+      const response = await fetch(`${API_URL}/tasks`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify({
+          title: task.trim(),
+          priority: priority || "Default",
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "Failed to add task");
+      }
+
+      setTasks((prevTasks) => [...prevTasks, data.task]);
+      setTask("");
+      setPriority("");
+    } catch (error) {
+      setError(error.message);
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  // Update a task
+  const updateTask = async (taskId, updates) => {
+    setError("");
+    setSaving(true);
+
+    try {
+      const response = await fetch(`${API_URL}/tasks/${taskId}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify(updates),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "Failed to update task");
+      }
+
+      setTasks((prevTasks) =>
+        prevTasks.map((item) =>
+          item._id === taskId ? data.task : item
+        )
+      );
+
+      return true;
+    } catch (error) {
+      setError(error.message);
+      return false;
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  // Delete a task
+  const deleteTask = async (taskId) => {
+    setError("");
+    setSaving(true);
+
+    try {
+      const response = await fetch(`${API_URL}/tasks/${taskId}`, {
+        method: "DELETE",
+        credentials: "include",
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "Failed to delete task");
+      }
+
+      setTasks((prevTasks) =>
+        prevTasks.filter((item) => item._id !== taskId)
+      );
+    } catch (error) {
+      setError(error.message);
+    } finally {
+      setSaving(false);
+    }
+  };
+
   return (
     <div className="tasks-page">
       <h1>Tasks</h1>
@@ -16,7 +121,8 @@ function Tasks({ tasks, setTasks }) {
       </p>
 
       <div className="task-input">
-        <input placeholder="Add a new task..."
+        <input
+          placeholder="Add a new task..."
           value={task}
           onChange={(event) => setTask(event.target.value)}
         />
@@ -31,21 +137,12 @@ function Tasks({ tasks, setTasks }) {
           <option value="High">High</option>
         </select>
 
-        <button onClick={() => {
-          if (!task.trim()) return;
-
-          setTasks([...tasks, {
-            id: Date.now(),
-            title: task,
-            priority: priority,
-            completed: false,
-          },
-          ])
-          setTask("");
-          setPriority("");
-        }}
-        >Add</button>
+        <button onClick={addTask} disabled={saving}>
+          {saving ? "Saving..." : "Add"}
+        </button>
       </div>
+
+      {error && <p className="auth-error">{error}</p>}
 
       <h2>My Tasks</h2>
 
@@ -53,28 +150,27 @@ function Tasks({ tasks, setTasks }) {
         {tasks.length === 0 ? (
           <p className="empty-state">No tasks yet.</p>
         ) : (
-
           tasks.map((taskItem) => (
-            <div className="task-item" key={taskItem.id}>
+            <div className="task-item" key={taskItem._id}>
               <div className="task-info">
                 <input
                   type="checkbox"
                   checked={taskItem.completed}
-                  onChange={() => {
-                    setTasks(
-                      tasks.map((item) =>
-                        item.id === taskItem.id
-                          ? { ...item, completed: !item.completed }
-                          : item
-                      )
-                    );
-                  }}
+                  disabled={saving}
+                  onChange={() =>
+                    updateTask(taskItem._id, {
+                      completed: !taskItem.completed,
+                    })
+                  }
                 />
-                {editingTaskId === taskItem.id ? (
+
+                {editingTaskId === taskItem._id ? (
                   <input
                     type="text"
                     value={editedTitle}
-                    onChange={(event) => setEditedTitle(event.target.value)}
+                    onChange={(event) =>
+                      setEditedTitle(event.target.value)
+                    }
                     autoFocus
                   />
                 ) : (
@@ -85,12 +181,14 @@ function Tasks({ tasks, setTasks }) {
               </div>
 
               <div className="priority-slot">
-                {editingTaskId === taskItem.id ? (
+                {editingTaskId === taskItem._id ? (
                   <select
                     value={editedPriority}
-                    onChange={(event) => setEditedPriority(event.target.value)}
+                    onChange={(event) =>
+                      setEditedPriority(event.target.value)
+                    }
                   >
-                    <option value="">No priority</option>
+                    <option value="Default">No priority</option>
                     <option value="Low">Low</option>
                     <option value="Medium">Medium</option>
                     <option value="High">High</option>
@@ -98,34 +196,30 @@ function Tasks({ tasks, setTasks }) {
                 ) : (
                   taskItem.priority && (
                     <span className={`priority ${taskItem.priority.toLowerCase()}`}>
-                      {taskItem.priority}
+                      {taskItem.priority === "Default" ? "" : taskItem.priority}
                     </span>
                   )
                 )}
               </div>
-              {editingTaskId === taskItem.id ? (
+
+              {editingTaskId === taskItem._id ? (
                 <>
                   <button
                     className="edit-button"
-                    onClick={() => {
+                    disabled={saving}
+                    onClick={async () => {
                       if (!editedTitle.trim()) return;
 
-                      setTasks(
-                        tasks.map((item) =>
-                          item.id === taskItem.id
-                            ? {
-                              ...item,
-                              title: editedTitle.trim(),
-                              priority: editedPriority,
-                            }
-                              : item
-                        )
-                      );
+                      const updated = await updateTask(taskItem._id, {
+                        title: editedTitle.trim(),
+                        priority: editedPriority || "Default",
+                      });
 
-                      setEditingTaskId(null);
-                      setEditedTitle("");
-                      setEditedPriority("");
-                      
+                      if (updated) {
+                        setEditingTaskId(null);
+                        setEditedTitle("");
+                        setEditedPriority("");
+                      }
                     }}
                   >
                     Save
@@ -133,6 +227,7 @@ function Tasks({ tasks, setTasks }) {
 
                   <button
                     className="edit-button"
+                    disabled={saving}
                     onClick={() => {
                       setEditingTaskId(null);
                       setEditedTitle("");
@@ -146,10 +241,11 @@ function Tasks({ tasks, setTasks }) {
                 <>
                   <button
                     className="edit-button"
+                    disabled={saving}
                     onClick={() => {
-                      setEditingTaskId(taskItem.id);
+                      setEditingTaskId(taskItem._id);
                       setEditedTitle(taskItem.title);
-                      setEditedPriority(taskItem.priority || "");
+                      setEditedPriority(taskItem.priority || "Default");
                     }}
                   >
                     Edit
@@ -157,23 +253,18 @@ function Tasks({ tasks, setTasks }) {
 
                   <button
                     className="delete-button"
-                    onClick={() => {
-                      setTasks(
-                        tasks.filter((item) => item.id !== taskItem.id)
-                      );
-                    }}
+                    disabled={saving}
+                    onClick={() => deleteTask(taskItem._id)}
                   >
                     Delete
                   </button>
                 </>
               )}
-            </div >
-
+            </div>
           ))
         )}
-
       </div>
-    </div >
+    </div>
   );
 }
 

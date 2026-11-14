@@ -1,3 +1,5 @@
+import Login from "./pages/Login";
+import Register from "./pages/Register";
 import Sidebar from "./components/Sidebar";
 import "./App.css";
 import Dashboard from "./components/Dashboard";
@@ -5,71 +7,155 @@ import Tasks from "./components/Tasks";
 import Goals from "./components/Goals";
 import { useState, useEffect } from "react";
 import Habits from "./components/Habits";
-import "./styles/shared.css"
+import "./styles/shared.css";
 import Finances from "./components/Finances";
 import Analytics from "./components/Analytics";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
+
 import VerifyEmail from "./pages/VerifyEmail";
+import { AuthProvider, useAuth } from "./context/AuthContext";
+
+function ProtectedRoute({ children }) {
+  const { user, loading } = useAuth();
+
+  if (loading) {
+    return <p>Checking authentication...</p>;
+  }
+
+  if (!user) {
+    return <Navigate to="/login" replace />;
+  }
+
+  return children;
+}
+
 
 function DashboardApp() {
   const [activePage, setActivePage] = useState("Dashboard");
-  const [tasks, setTasks] = useState(() => {
-    return JSON.parse(localStorage.getItem("tasks")) || [];
-  });
-  const [goals, setGoals] = useState(() => {
-    return JSON.parse(localStorage.getItem("goals")) || [];
-  });
-  const [habits, setHabits] = useState(() => {
-    return JSON.parse(localStorage.getItem("habits")) || [];
-  });
-  const [transactions, setTransactions] = useState(() => {
-    return JSON.parse(localStorage.getItem("transactions")) || [];
-  });
+
+  // Tasks are now loaded from MongoDB
+  const [tasks, setTasks] = useState([]);
+  const [tasksLoading, setTasksLoading] = useState(true);
+  const [tasksError, setTasksError] = useState("");
+
+  // These will be connected to MongoDB later
+  const [goals, setGoals] = useState([]);
+  const [habits, setHabits] = useState([]);
+  const [transactions, setTransactions] = useState([]);
 
   useEffect(() => {
-    localStorage.setItem("tasks", JSON.stringify(tasks));
-  }, [tasks]);
+    const fetchTasks = async () => {
+      try {
+        const response = await fetch(
+          "http://localhost:5000/api/v1/tasks",
+          {
+            method: "GET",
+            credentials: "include",
+          }
+        );
 
-  useEffect(() => {
-    localStorage.setItem("goals", JSON.stringify(goals));
-  }, [goals]);
+        const data = await response.json();
 
-  useEffect(() => {
-    localStorage.setItem("habits", JSON.stringify(habits));
-  }, [habits]);
-  useEffect(() => {
-    localStorage.setItem("transactions", JSON.stringify(transactions));
-  }, [transactions]);
+        if (!response.ok) {
+          throw new Error(data.message || "Failed to fetch tasks");
+        }
+
+        setTasks(data.tasks);
+      } catch (error) {
+        setTasksError(error.message);
+      } finally {
+        setTasksLoading(false);
+      }
+    };
+
+    fetchTasks();
+  }, []);
 
   return (
     <div className="app">
       <Sidebar activePage={activePage} setActivePage={setActivePage} />
+
       <main>
-        {activePage === "Dashboard" && <Dashboard setTasks={setTasks} tasks={tasks} goals={goals} habits={habits} setActivePage={setActivePage} />}
+        {tasksError && <p className="auth-error">{tasksError}</p>}
 
-        {activePage === "Tasks" && <Tasks tasks={tasks} setTasks={setTasks} />}
+        {activePage === "Dashboard" && (
+          tasksLoading ? (
+            <p>Loading tasks...</p>
+          ) : (
+            <Dashboard
+              setTasks={setTasks}
+              tasks={tasks}
+              goals={goals}
+              habits={habits}
+              setActivePage={setActivePage}
+            />
+          )
+        )}
 
-        {activePage === "Goals" && <Goals goals={goals} setGoals={setGoals} />}
+        {activePage === "Tasks" && (
+          tasksLoading ? (
+            <p>Loading tasks...</p>
+          ) : (
+            <Tasks tasks={tasks} setTasks={setTasks} />
+          )
+        )}
 
-        {activePage === "Habits" && <Habits habits={habits} setHabits={setHabits} />}
+        {activePage === "Goals" && (
+          <Goals goals={goals} setGoals={setGoals} />
+        )}
 
-        {activePage === "Finances" && <Finances transactions={transactions} setTransactions={setTransactions} />}
+        {activePage === "Habits" && (
+          <Habits habits={habits} setHabits={setHabits} />
+        )}
 
-        {activePage === "Analytics" && <Analytics tasks={tasks} goals={goals} habits={habits}
-          transactions={transactions} />}
+        {activePage === "Finances" && (
+          <Finances
+            transactions={transactions}
+            setTransactions={setTransactions}
+          />
+        )}
+
+        {activePage === "Analytics" && (
+          <Analytics
+            tasks={tasks}
+            goals={goals}
+            habits={habits}
+            transactions={transactions}
+          />
+        )}
       </main>
     </div>
   );
 }
 
+
 function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<DashboardApp />} />
-        <Route path="/verify-email" element={<VerifyEmail />} />
-      </Routes>
-    </BrowserRouter>
+    <AuthProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <ProtectedRoute>
+                <DashboardApp />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route path="/verify-email" element={<VerifyEmail />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+
+          {/* Login and Register routes will be added next */}
+        </Routes>
+      </BrowserRouter>
+    </AuthProvider>
   );
 }
 
