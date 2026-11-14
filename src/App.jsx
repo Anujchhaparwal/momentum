@@ -38,13 +38,16 @@ function ProtectedRoute({ children }) {
 function DashboardApp() {
   const [activePage, setActivePage] = useState("Dashboard");
 
-  // Tasks are now loaded from MongoDB
+
   const [tasks, setTasks] = useState([]);
   const [tasksLoading, setTasksLoading] = useState(true);
   const [tasksError, setTasksError] = useState("");
 
-  // These will be connected to MongoDB later
+
   const [goals, setGoals] = useState([]);
+  const [goalsLoading, setGoalsLoading] = useState(true);
+  const [goalsError, setGoalsError] = useState("");
+
   const [habits, setHabits] = useState([]);
   const [transactions, setTransactions] = useState([]);
 
@@ -76,12 +79,41 @@ function DashboardApp() {
     fetchTasks();
   }, []);
 
+  useEffect(() => {
+    const fetchGoals = async () => {
+      try {
+        const response = await fetch(
+          "http://localhost:5000/api/v1/goals",
+          {
+            method: "GET",
+            credentials: "include",
+          }
+        );
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.message || "Failed to fetch goals");
+        }
+
+        setGoals(data.goals);
+      } catch (error) {
+        setGoalsError(error.message);
+      } finally {
+        setGoalsLoading(false);
+      }
+    };
+
+    fetchGoals();
+  }, []);
+
   return (
     <div className="app">
       <Sidebar activePage={activePage} setActivePage={setActivePage} />
 
       <main>
         {tasksError && <p className="auth-error">{tasksError}</p>}
+        {goalsError && <p className="auth-error">{goalsError}</p>}
 
         {activePage === "Dashboard" && (
           tasksLoading ? (
@@ -106,7 +138,11 @@ function DashboardApp() {
         )}
 
         {activePage === "Goals" && (
-          <Goals goals={goals} setGoals={setGoals} />
+          goalsLoading ? (
+            <p>Loading goals...</p>
+          ) : (
+            <Goals goals={goals} setGoals={setGoals} />
+          )
         )}
 
         {activePage === "Habits" && (

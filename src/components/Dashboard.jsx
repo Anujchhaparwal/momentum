@@ -25,7 +25,7 @@ function Dashboard({ tasks, setTasks, goals, habits, setActivePage }) {
           </div>
         ) : (
           activeGoals.map((goalItem) => (
-            <div className="goal-item" key={goalItem.id}>
+            <div className="goal-item" key={goalItem._id}>
               <div className="goal-details">
                 <span>{goalItem.title}</span>
 
@@ -153,7 +153,7 @@ function Dashboard({ tasks, setTasks, goals, habits, setActivePage }) {
                 </div>
               ) : (
                 habits.map((habitItem) => (
-                  <div className="habit-item" key={habitItem.id}>
+                  <div className="habit-item" key={habitItem._id}>
                     <span className={habitItem.completed ? "completed" : ""}>
                       {habitItem.title}
                     </span>
