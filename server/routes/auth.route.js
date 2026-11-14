@@ -7,15 +7,19 @@ import {
   logoutUser,
   getCurrentUser,
 } from "../controllers/auth.controller.js";
-import authLimiter from "../middleware/authLimiter.js";
+import {
+  loginLimiter,
+  registerLimiter,
+  resendLimiter,
+} from "../middleware/authLimiter.js";
 import authMiddleware from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
-router.post("/register", authLimiter, registerUser);
+router.post("/register", registerLimiter, registerUser);
 router.get("/verify-email", verifyEmail);
-router.post("/resend-verification", authLimiter, resendVerification);
-router.post("/login", authLimiter, loginUser);
+router.post("/resend-verification", resendLimiter, resendVerification);
+router.post("/login", loginLimiter, loginUser);
 router.post("/logout", logoutUser);
 router.get("/me", authMiddleware, getCurrentUser);
 
