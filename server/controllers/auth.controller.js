@@ -231,6 +231,7 @@ export const resendVerification = async (req, res) => {
   }
 };
 
+
 export const loginUser = async (req, res) => {
   try {
     const { email, password } = req.body || {};
@@ -257,11 +258,13 @@ export const loginUser = async (req, res) => {
         message: "Invalid email or password",
       });
     }
+
     if (!user.isVerified) {
       return res.status(403).json({
         message: "Please verify your email before logging in.",
       });
     }
+
     const isPasswordCorrect = await bcrypt.compare(
       password,
       user.password
@@ -272,17 +275,27 @@ export const loginUser = async (req, res) => {
         message: "Invalid email or password",
       });
     }
+
     if (!process.env.JWT_SECRET) {
       throw new Error("JWT_SECRET is not configured");
     }
+
     const token = jwt.sign(
       { userId: user._id },
       process.env.JWT_SECRET,
       { expiresIn: process.env.JWT_EXPIRES_IN }
     );
+
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      maxAge: 24 * 60 * 60 * 1000,
+      path: "/",
+    });
+
     return res.status(200).json({
       message: "Login successful",
-      token,
       user: {
         id: user._id,
         name: user.name,
@@ -294,6 +307,48 @@ export const loginUser = async (req, res) => {
 
     return res.status(500).json({
       message: "Something went wrong during login",
+    });
+  }
+};
+
+export const logoutUser = (req, res) => {
+  res.clearCookie("token", {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax",
+    path: "/",
+  });
+
+  return res.status(200).json({
+    message: "Logout successful",
+  });
+};
+
+
+export const getCurrentUser = async (req, res) => {
+  try {
+    const user = await User.findById(req.user.userId).select(
+      "name email isVerified"
+    );
+
+    if (!user || !user.isVerified) {
+      return res.status(401).json({
+        message: "User not found or email not verified",
+      });
+    }
+
+    return res.status(200).json({
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+      },
+    });
+  } catch (error) {
+    console.error("Get current user error:", error);
+
+    return res.status(500).json({
+      message: "Something went wrong while fetching user details",
     });
   }
 };
