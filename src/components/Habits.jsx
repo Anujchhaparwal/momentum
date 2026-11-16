@@ -1,47 +1,107 @@
-import { useState, useEffect } from "react";
-import "./Habits.css"
 
-const getToday = () => {
-  const date = new Date();
+import { useState } from "react";
+import "./Habits.css";
 
-  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(
-    date.getDate()
-  ).padStart(2, "0")}`;
-};
+const API_URL = "http://localhost:5000/api/v1";
 
 function Habits({ habits, setHabits }) {
   const [habit, setHabit] = useState("");
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState("");
 
-  useEffect(() => {
-    const today = getToday();
+  const addHabit = async () => {
+    if (!habit.trim() || saving) return;
 
-    const updatedHabits = habits.map((item) => {
-      if (
-        item.completed &&
-        item.lastCompletedDate !== today
-      ) {
-        return {
-          ...item,
-          completed: false,
-        };
+    setSaving(true);
+    setError("");
+
+    try {
+      const response = await fetch(`${API_URL}/habits`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify({ title: habit.trim() }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "Failed to add habit");
       }
 
-      return item;
-    });
+      setHabits((previousHabits) => [
+        data.habit,
+        ...previousHabits,
+      ]);
 
-    const hasChanged = updatedHabits.some(
-      (item, index) =>
-        item.completed !== habits[index].completed
-    );
-
-    if (hasChanged) {
-      setHabits(updatedHabits);
+      setHabit("");
+    } catch (error) {
+      setError(error.message);
+    } finally {
+      setSaving(false);
     }
-  }, [habits, setHabits]);
+  };
+
+  const toggleHabit = async (habitId) => {
+    setError("");
+
+    try {
+      const response = await fetch(
+        `${API_URL}/habits/${habitId}/toggle`,
+        {
+          method: "PATCH",
+          credentials: "include",
+        }
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "Failed to update habit");
+      }
+
+      setHabits((previousHabits) =>
+        previousHabits.map((item) =>
+          item._id === habitId ? data.habit : item
+        )
+      );
+    } catch (error) {
+      setError(error.message);
+    }
+  };
+
+  const deleteHabit = async (habitId) => {
+    setError("");
+
+    try {
+      const response = await fetch(
+        `${API_URL}/habits/${habitId}`,
+        {
+          method: "DELETE",
+          credentials: "include",
+        }
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "Failed to delete habit");
+      }
+
+      setHabits((previousHabits) =>
+        previousHabits.filter((item) => item._id !== habitId)
+      );
+    } catch (error) {
+      setError(error.message);
+    }
+  };
 
   return (
     <div className="habits-page">
       <h1>Habits</h1>
+
       <div className="habit-input">
         <input
           placeholder="Add a new habit..."
@@ -49,87 +109,33 @@ function Habits({ habits, setHabits }) {
           onChange={(event) => setHabit(event.target.value)}
         />
 
-        <button
-          onClick={() => {
-            if (!habit.trim()) return;
-
-            setHabits([
-              ...habits,
-              {
-                id: Date.now(),
-                title: habit,
-                completed: false,
-                streak: 0,
-                lastCompletedDate: null,
-              },
-            ]);
-
-            setHabit("");
-          }}
-        >
-          Add
+        <button onClick={addHabit} disabled={saving}>
+          {saving ? "Adding..." : "Add"}
         </button>
       </div>
 
+      {error && <p className="auth-error">{error}</p>}
+
       <div className="habit-list">
         {habits.map((habitItem) => (
-          <div className="habit-item" key={habitItem.id}>
+          <div className="habit-item" key={habitItem._id}>
             <div className="habit-info">
               <input
                 type="checkbox"
                 checked={habitItem.completed}
-                onChange={() => {
-                  const today = getToday();
-
-                  setHabits(
-                    habits.map((item) => {
-                      if (item.id !== habitItem.id) return item;
-
-                      if (item.completed) {
-                        return {
-                          ...item,
-                          completed: false,
-                        };
-                      }
-
-                      const yesterday = new Date();
-                      yesterday.setDate(yesterday.getDate() - 1);
-                      const yesterdayString = yesterday
-                        .toISOString()
-                        .split("T")[0];
-
-                      const newStreak =
-                        item.lastCompletedDate === today
-                          ? item.streak
-                          : item.lastCompletedDate === yesterdayString
-                            ? item.streak + 1
-                            : 1;
-
-                      return {
-                        ...item,
-                        completed: true,
-                        streak: newStreak,
-                        lastCompletedDate: today,
-                      };
-                    })
-                  );
-                }}
+                onChange={() => toggleHabit(habitItem._id)}
               />
 
               <span className={habitItem.completed ? "completed" : ""}>
                 {habitItem.title}
               </span>
             </div>
+
             <span className="habit-streak">
               {habitItem.streak} day streak
             </span>
-            <button
-              onClick={() => {
-                setHabits(
-                  habits.filter((item) => item.id !== habitItem.id)
-                );
-              }}
-            >
+
+            <button onClick={() => deleteHabit(habitItem._id)}>
               Delete
             </button>
           </div>

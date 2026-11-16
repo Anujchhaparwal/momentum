@@ -122,6 +122,10 @@ export const toggleHabit = async (req, res) => {
     if (habit.completed && habit.lastCompletedDate === today) {
       habit.completed = false;
       habit.streak = Math.max(0, habit.streak - 1);
+
+      // Restore the previous completion date
+      habit.lastCompletedDate =
+        habit.streak > 0 ? yesterday : null;
     } else {
       // Check whether yesterday was completed
       if (habit.lastCompletedDate === today) {

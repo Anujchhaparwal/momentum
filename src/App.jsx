@@ -49,6 +49,9 @@ function DashboardApp() {
   const [goalsError, setGoalsError] = useState("");
 
   const [habits, setHabits] = useState([]);
+  const [habitsLoading, setHabitsLoading] = useState(true);
+  const [habitsError, setHabitsError] = useState("");
+
   const [transactions, setTransactions] = useState([]);
 
   useEffect(() => {
@@ -107,6 +110,34 @@ function DashboardApp() {
     fetchGoals();
   }, []);
 
+  useEffect(() => {
+    const fetchHabits = async () => {
+      try {
+        const response = await fetch(
+          "http://localhost:5000/api/v1/habits",
+          {
+            method: "GET",
+            credentials: "include",
+          }
+        );
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.message || "Failed to fetch habits");
+        }
+
+        setHabits(data.habits);
+      } catch (error) {
+        setHabitsError(error.message);
+      } finally {
+        setHabitsLoading(false);
+      }
+    };
+
+    fetchHabits();
+  }, []);
+
   return (
     <div className="app">
       <Sidebar activePage={activePage} setActivePage={setActivePage} />
@@ -114,6 +145,7 @@ function DashboardApp() {
       <main>
         {tasksError && <p className="auth-error">{tasksError}</p>}
         {goalsError && <p className="auth-error">{goalsError}</p>}
+        {habitsError && <p className="auth-error">{habitsError}</p>}
 
         {activePage === "Dashboard" && (
           tasksLoading ? (
@@ -146,7 +178,11 @@ function DashboardApp() {
         )}
 
         {activePage === "Habits" && (
-          <Habits habits={habits} setHabits={setHabits} />
+          habitsLoading ? (
+            <p>Loading habits...</p>
+          ) : (
+            <Habits habits={habits} setHabits={setHabits} />
+          )
         )}
 
         {activePage === "Finances" && (
