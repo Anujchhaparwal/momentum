@@ -126,44 +126,44 @@ function Analytics({ tasks, goals, habits, transactions }) {
             </p>
           </div>
         </div>
-        <div className="analytics-section">
-          <h2>Spending by Category</h2>
+      </div>
+      <div className="analytics-section">
+        <h2>Spending by Category</h2>
 
-          <div className="category-list">
-            {Object.keys(spendingByCategory).length === 0 ? (
-              <p className="empty-state">
-                No expense data yet.
-              </p>
-            ) : (
-              Object.entries(spendingByCategory)
-                .sort((a, b) => b[1] - a[1]).map(
-                  ([category, amount]) => {
-                    const width =
-                      maxCategorySpending === 0
-                        ? 0
-                        : (amount / maxCategorySpending) * 100;
+        <div className="category-list">
+          {Object.keys(spendingByCategory).length === 0 ? (
+            <p className="empty-state">
+              No expense data yet.
+            </p>
+          ) : (
+            Object.entries(spendingByCategory)
+              .sort((a, b) => b[1] - a[1]).map(
+                ([category, amount]) => {
+                  const width =
+                    maxCategorySpending === 0
+                      ? 0
+                      : (amount / maxCategorySpending) * 100;
 
 
 
-                    return (
-                      <div className="category-item" key={category}>
-                        <div className="category-header">
-                          <span>{category}</span>
-                          <span>₹{amount.toLocaleString()}</span>
-                        </div>
-
-                        <div className="category-bar">
-                          <div
-                            className="category-fill"
-                            style={{ width: `${width}%` }}
-                          ></div>
-                        </div>
+                  return (
+                    <div className="category-item" key={category}>
+                      <div className="category-header">
+                        <span>{category}</span>
+                        <span>₹{amount.toLocaleString()}</span>
                       </div>
-                    );
-                  }
-                )
-            )}
-          </div>
+
+                      <div className="category-bar">
+                        <div
+                          className="category-fill"
+                          style={{ width: `${width}%` }}
+                        ></div>
+                      </div>
+                    </div>
+                  );
+                }
+              )
+          )}
         </div>
       </div>
     </div>
