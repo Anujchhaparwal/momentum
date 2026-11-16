@@ -1,8 +1,10 @@
 import { useState } from "react";
+import { useAuth } from "../context/AuthContext";
 import "./Sidebar.css";
 
 function Sidebar({ activePage, setActivePage }) {
   const [menuOpen, setMenuOpen] = useState(false);
+  const { logout } = useAuth();
 
   const navigationItems = [
     { name: "Dashboard", icon: "⌂" },
@@ -15,6 +17,11 @@ function Sidebar({ activePage, setActivePage }) {
 
   const handleNavigation = (page) => {
     setActivePage(page);
+    setMenuOpen(false);
+  };
+
+  const handleLogout = async () => {
+    await logout();
     setMenuOpen(false);
   };
 
@@ -59,6 +66,16 @@ function Sidebar({ activePage, setActivePage }) {
             </button>
           ))}
         </nav>
+
+        <div className="sidebar-footer">
+          <button
+            className="logout-button"
+            onClick={handleLogout}
+          >
+            <span className="nav-icon">↪</span>
+            <span>Logout</span>
+          </button>
+        </div>
       </div>
     </>
   );
