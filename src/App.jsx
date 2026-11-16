@@ -1,3 +1,4 @@
+import API_URL from "./config/api";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Sidebar from "./components/Sidebar";
@@ -60,7 +61,7 @@ function DashboardApp() {
     const fetchTasks = async () => {
       try {
         const response = await fetch(
-          "http://localhost:5000/api/v1/tasks",
+          `${API_URL}/tasks`,
           {
             method: "GET",
             credentials: "include",
@@ -88,7 +89,7 @@ function DashboardApp() {
     const fetchGoals = async () => {
       try {
         const response = await fetch(
-          "http://localhost:5000/api/v1/goals",
+          `${API_URL}/goals`,
           {
             method: "GET",
             credentials: "include",
@@ -116,7 +117,7 @@ function DashboardApp() {
     const fetchHabits = async () => {
       try {
         const response = await fetch(
-          "http://localhost:5000/api/v1/habits",
+          `${API_URL}/habits`,
           {
             method: "GET",
             credentials: "include",
@@ -144,7 +145,7 @@ function DashboardApp() {
     const fetchTransactions = async () => {
       try {
         const response = await fetch(
-          "http://localhost:5000/api/v1/transactions",
+          `${API_URL}/transactions`,
           {
             method: "GET",
             credentials: "include",
