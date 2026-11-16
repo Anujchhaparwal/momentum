@@ -53,6 +53,8 @@ function DashboardApp() {
   const [habitsError, setHabitsError] = useState("");
 
   const [transactions, setTransactions] = useState([]);
+  const [transactionsLoading, setTransactionsLoading] = useState(true);
+  const [transactionsError, setTransactionsError] = useState("");
 
   useEffect(() => {
     const fetchTasks = async () => {
@@ -138,6 +140,34 @@ function DashboardApp() {
     fetchHabits();
   }, []);
 
+  useEffect(() => {
+    const fetchTransactions = async () => {
+      try {
+        const response = await fetch(
+          "http://localhost:5000/api/v1/transactions",
+          {
+            method: "GET",
+            credentials: "include",
+          }
+        );
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.message || "Failed to fetch transactions");
+        }
+
+        setTransactions(data.transactions);
+      } catch (error) {
+        setTransactionsError(error.message);
+      } finally {
+        setTransactionsLoading(false);
+      }
+    };
+
+    fetchTransactions();
+  }, []);
+
   return (
     <div className="app">
       <Sidebar activePage={activePage} setActivePage={setActivePage} />
@@ -146,6 +176,7 @@ function DashboardApp() {
         {tasksError && <p className="auth-error">{tasksError}</p>}
         {goalsError && <p className="auth-error">{goalsError}</p>}
         {habitsError && <p className="auth-error">{habitsError}</p>}
+        {transactionsError && <p className="auth-error">{transactionsError}</p>}
 
         {activePage === "Dashboard" && (
           tasksLoading ? (
@@ -186,10 +217,14 @@ function DashboardApp() {
         )}
 
         {activePage === "Finances" && (
-          <Finances
-            transactions={transactions}
-            setTransactions={setTransactions}
-          />
+          transactionsLoading ? (
+            <p>Loading transactions...</p>
+          ) : (
+            <Finances
+              transactions={transactions}
+              setTransactions={setTransactions}
+            />
+          )
         )}
 
         {activePage === "Analytics" && (

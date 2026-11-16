@@ -1,31 +1,89 @@
+
 import { useState } from "react";
 import "./Finances.css";
+
+const API_URL = "http://localhost:5000/api/v1";
 
 function Finances({ transactions, setTransactions }) {
   const [description, setDescription] = useState("");
   const [amount, setAmount] = useState("");
   const [type, setType] = useState("Expense");
   const [category, setCategory] = useState("Food");
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState("");
 
-  const addTransaction = () => {
-    if (!description.trim() || !amount) return;
+  const addTransaction = async () => {
+    if (!description.trim() || !amount || saving) return;
 
-    setTransactions([
-      ...transactions,
-      {
-        id: Date.now(),
-        description: description.trim(),
-        amount: Number(amount),
-        type,
-        category,
-        date: new Date().toISOString().split("T")[0],
-      },
-    ]);
+    setSaving(true);
+    setError("");
 
-    setDescription("");
-    setAmount("");
-    setType("Expense");
-    setCategory("Food");
+    try {
+      const response = await fetch(`${API_URL}/transactions`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify({
+          description: description.trim(),
+          amount: Number(amount),
+          type,
+          category,
+          date: new Date().toLocaleDateString("en-CA", {
+            timeZone: "Asia/Kolkata",
+          }),
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "Failed to add transaction");
+      }
+
+      setTransactions((previousTransactions) => [
+        data.transaction,
+        ...previousTransactions,
+      ]);
+
+      setDescription("");
+      setAmount("");
+      setType("Expense");
+      setCategory("Food");
+    } catch (error) {
+      setError(error.message);
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const deleteTransaction = async (transactionId) => {
+    setError("");
+
+    try {
+      const response = await fetch(
+        `${API_URL}/transactions/${transactionId}`,
+        {
+          method: "DELETE",
+          credentials: "include",
+        }
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "Failed to delete transaction");
+      }
+
+      setTransactions((previousTransactions) =>
+        previousTransactions.filter(
+          (item) => item._id !== transactionId
+        )
+      );
+    } catch (error) {
+      setError(error.message);
+    }
   };
 
   const income = transactions
@@ -73,6 +131,8 @@ function Finances({ transactions, setTransactions }) {
         <input
           type="number"
           placeholder="Amount"
+          min="0.01"
+          step="0.01"
           value={amount}
           onChange={(event) => setAmount(event.target.value)}
         />
@@ -97,8 +157,12 @@ function Finances({ transactions, setTransactions }) {
           <option value="Other">Other</option>
         </select>
 
-        <button onClick={addTransaction}>Add</button>
+        <button onClick={addTransaction} disabled={saving}>
+          {saving ? "Adding..." : "Add"}
+        </button>
       </div>
+
+      {error && <p className="auth-error">{error}</p>}
 
       <h2>Transactions</h2>
 
@@ -109,12 +173,13 @@ function Finances({ transactions, setTransactions }) {
           transactions.map((transaction) => (
             <div
               className="transaction-item"
-              key={transaction.id}
+              key={transaction._id}
             >
               <div>
                 <strong>{transaction.description}</strong>
                 <span>
-                  {transaction.category} · {transaction.date}
+                  {transaction.category} ·{" "}
+                  {transaction.date.split("T")[0]}
                 </span>
               </div>
 
@@ -124,13 +189,7 @@ function Finances({ transactions, setTransactions }) {
               </span>
 
               <button
-                onClick={() => {
-                  setTransactions(
-                    transactions.filter(
-                      (item) => item.id !== transaction.id
-                    )
-                  );
-                }}
+                onClick={() => deleteTransaction(transaction._id)}
               >
                 Delete
               </button>
