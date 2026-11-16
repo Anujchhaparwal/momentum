@@ -1,8 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import API_URL from "../config/api";
 import "./Register.css";
-
-const API_URL = "http://localhost:5000/api/v1";
 
 function Register() {
   const [name, setName] = useState("");

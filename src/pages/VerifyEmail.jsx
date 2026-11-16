@@ -1,5 +1,6 @@
 import { useSearchParams } from "react-router-dom";
 import { useState } from "react";
+import API_URL from "../config/api";
 import "./VerifyEmail.css";
 
 
@@ -25,7 +26,7 @@ function VerifyEmail() {
       setStatus("loading");
 
       const response = await fetch(
-        `http://localhost:5000/api/v1/auth/verify-email?token=${encodeURIComponent(token)}`
+        `${API_URL}/auth/verify-email?token=${encodeURIComponent(token)}`
       );
 
       const data = await response.json();
@@ -53,7 +54,7 @@ function VerifyEmail() {
       setResendMessage("");
 
       const response = await fetch(
-        "http://localhost:5000/api/v1/auth/resend-verification",
+        `${API_URL}/auth/resend-verification`,
         {
           method: "POST",
           headers: {

@@ -1,5 +1,6 @@
 import StatCard from "./StatCard";
 import TaskItem from "./TaskItem";
+import API_URL from "../config/api";
 import "./Dashboard.css";
 
 function Dashboard({ tasks, setTasks, goals, habits, setActivePage }) {
@@ -96,7 +97,7 @@ function Dashboard({ tasks, setTasks, goals, habits, setActivePage }) {
                       onToggle={async () => {
                         try {
                           const response = await fetch(
-                            `http://localhost:5000/api/v1/tasks/${taskItem._id}`,
+                            `${API_URL}/tasks/${taskItem._id}`,
                             {
                               method: "PATCH",
                               headers: {

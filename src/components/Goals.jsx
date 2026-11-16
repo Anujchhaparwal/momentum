@@ -1,7 +1,6 @@
 import { useState } from "react";
+import API_URL from "../config/api";
 import "./Goals.css";
-
-const API_URL = "http://localhost:5000/api/v1";
 
 function Goals({ goals, setGoals }) {
   const [goal, setGoal] = useState("");

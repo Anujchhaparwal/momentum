@@ -1,8 +1,6 @@
-
 import { useState } from "react";
+import API_URL from "../config/api";
 import "./Finances.css";
-
-const API_URL = "http://localhost:5000/api/v1";
 
 function Finances({ transactions, setTransactions }) {
   const [description, setDescription] = useState("");
