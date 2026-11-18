@@ -22,26 +22,62 @@ import VerifyEmail from "./pages/VerifyEmail";
 import { AuthProvider, useAuth } from "./context/AuthContext";
 
 
+function AuthLoadingScreen() {
+  return (
+    <div className="auth-status-page">
+      <div className="auth-status-card">
+        <div className="loading-spinner"></div>
+
+        <h2>Waking up Momentum...</h2>
+
+        <p>
+          Our backend is hosted on Render's free tier, which may
+          temporarily go to sleep after inactivity.
+        </p>
+
+        <p>
+          The first visit may take a little longer while the
+          server wakes up. Subsequent visits should be faster.
+        </p>
+
+        <span>Thanks for your patience!</span>
+      </div>
+    </div>
+  );
+}
+
+
+function AuthErrorScreen() {
+  return (
+    <div className="auth-status-page">
+      <div className="auth-status-card">
+        <h2>Unable to connect to Momentum</h2>
+
+        <p>
+          We couldn't reach our server. It may be temporarily
+          unavailable. Please try again.
+        </p>
+
+        <button
+          className="auth-button"
+          onClick={() => window.location.reload()}
+        >
+          Retry
+        </button>
+      </div>
+    </div>
+  );
+}
+
 function ProtectedRoute({ children }) {
   const { user, loading, authError } = useAuth();
 
   if (loading) {
-    return <p>Checking authentication...</p>;
+    return <AuthLoadingScreen />;
   }
 
   if (authError) {
-    return (
-      <div className="auth-error">
-        <h2>Unable to connect to Momentum</h2>
-        <p>
-          The server may be waking up or temporarily unavailable.
-          Please try again.
-        </p>
-        <button onClick={() => window.location.reload()}>
-          Retry
-        </button>
-      </div>
-    );
+    return <AuthErrorScreen />;
   }
 
   if (!user) {
@@ -50,7 +86,6 @@ function ProtectedRoute({ children }) {
 
   return children;
 }
-
 
 
 function DashboardApp() {
