@@ -24,6 +24,10 @@ const demoSnapshotSchema = new mongoose.Schema(
       type: [mongoose.Schema.Types.Mixed],
       default: [],
     },
+    lastResetDate: {
+      type: String,
+      default: null,
+    },
   },
   {
     timestamps: true,

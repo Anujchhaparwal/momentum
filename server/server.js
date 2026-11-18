@@ -7,6 +7,7 @@ import cookieParser from "cookie-parser";
 import connectDB from "./config/db.js";
 import authRouter from "./routes/auth.route.js";
 import { verifyEmailConnection } from "./utils/sendEmail.js";
+import startDemoResetScheduler from "./utils/demoResetScheduler.js";
 import taskRouter from "./routes/task.route.js";
 import goalRouter from "./routes/goal.route.js";
 import habitRouter from "./routes/habit.route.js";
@@ -47,6 +48,8 @@ app.get("/", (req, res) => {
 const startServer = async () => {
   try {
     await connectDB();
+    
+    startDemoResetScheduler();
 
     // Email connection check should not block server startup
     try {
