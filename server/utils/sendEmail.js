@@ -1,26 +1,29 @@
-import nodemailer from "nodemailer";
+import { Resend } from "resend";
 import process from "node:process";
 
-const transporter = nodemailer.createTransport({
-  service: "gmail",
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
-  },
-});
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 const sendEmail = async (to, subject, html) => {
-  await transporter.sendMail({
-    from: `"Momentum" <${process.env.EMAIL_USER}>`,
+  const { data, error } = await resend.emails.send({
+    from: "Momentum <onboarding@resend.dev>",
     to,
     subject,
     html,
   });
+
+  if (error) {
+    throw new Error(error.message || "Failed to send email");
+  }
+
+  return data;
 };
 
 export default sendEmail;
 
 export const verifyEmailConnection = async () => {
-  await transporter.verify();
-  console.log("Email server is ready to send messages");
+  if (!process.env.RESEND_API_KEY) {
+    throw new Error("RESEND_API_KEY is missing");
+  }
+
+  console.log("Resend API key is configured");
 };
