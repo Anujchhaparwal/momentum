@@ -7,7 +7,7 @@ import Task from "../models/Task.js";
 import Goal from "../models/Goal.js";
 import Habit from "../models/Habit.js";
 import Transaction from "../models/Transaction.js";
-import DemoSnapshot from "../scripts/DemoSnapshot.js";
+import DemoSnapshot from "../models/DemoSnapshot.js";
 
 const saveDemoSnapshot = async () => {
   try {
