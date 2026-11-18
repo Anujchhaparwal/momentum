@@ -34,26 +34,22 @@ const resetDemo = async () => {
 
     try {
       await session.withTransaction(async () => {
-        await Promise.all([
-          Task.deleteMany({ user: userId }, { session }),
-          Goal.deleteMany({ user: userId }, { session }),
-          Habit.deleteMany({ user: userId }, { session }),
-          Transaction.deleteMany({ user: userId }, { session }),
-        ]);
+        await Task.deleteMany({ user: userId }, { session });
+        await Goal.deleteMany({ user: userId }, { session });
+        await Habit.deleteMany({ user: userId }, { session });
+        await Transaction.deleteMany({ user: userId }, { session });
 
-        await Promise.all([
-          Task.insertMany(snapshot.tasks || [], { session }),
-          Goal.insertMany(snapshot.goals || [], { session }),
-          Habit.insertMany(snapshot.habits || [], { session }),
-          Transaction.insertMany(snapshot.transactions || [], { session }),
-        ]);
+        await Task.insertMany(snapshot.tasks || [], { session });
+        await Goal.insertMany(snapshot.goals || [], { session });
+        await Habit.insertMany(snapshot.habits || [], { session });
+        await Transaction.insertMany(snapshot.transactions || [], { session });
       });
 
       console.log("Demo account reset successfully.");
     } finally {
       await session.endSession();
     }
-    
+
   } catch (error) {
     console.error("Demo account reset failed:", error);
     process.exitCode = 1;
