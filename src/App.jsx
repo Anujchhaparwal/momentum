@@ -21,11 +21,27 @@ import {
 import VerifyEmail from "./pages/VerifyEmail";
 import { AuthProvider, useAuth } from "./context/AuthContext";
 
+
 function ProtectedRoute({ children }) {
-  const { user, loading } = useAuth();
+  const { user, loading, authError } = useAuth();
 
   if (loading) {
     return <p>Checking authentication...</p>;
+  }
+
+  if (authError) {
+    return (
+      <div className="auth-error">
+        <h2>Unable to connect to Momentum</h2>
+        <p>
+          The server may be waking up or temporarily unavailable.
+          Please try again.
+        </p>
+        <button onClick={() => window.location.reload()}>
+          Retry
+        </button>
+      </div>
+    );
   }
 
   if (!user) {
@@ -34,6 +50,7 @@ function ProtectedRoute({ children }) {
 
   return children;
 }
+
 
 
 function DashboardApp() {

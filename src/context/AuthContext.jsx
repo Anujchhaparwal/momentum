@@ -6,32 +6,63 @@ const AuthContext = createContext(null);
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [authError, setAuthError] = useState(false);
 
   // Check whether a valid login session already exists
   useEffect(() => {
+    let isMounted = true;
+    const controller = new AbortController();
+
     const checkAuth = async () => {
+      const timeoutId = setTimeout(() => {
+        controller.abort();
+      }, 60000);
+
       try {
         const response = await fetch(`${API_URL}/auth/me`, {
           method: "GET",
           credentials: "include",
+          signal: controller.signal,
         });
 
-        if (!response.ok) {
+        if (!isMounted) return;
+
+        if (response.status === 401) {
           setUser(null);
+          setAuthError(false);
           return;
         }
 
+        if (!response.ok) {
+          throw new Error("Unable to verify authentication");
+        }
+
         const data = await response.json();
-        setUser(data.user);
+
+        if (isMounted) {
+          setUser(data.user);
+          setAuthError(false);
+        }
       } catch (error) {
+        if (!isMounted) return;
+
         console.error("Authentication check failed:", error);
-        setUser(null);
+        setAuthError(true);
       } finally {
-        setLoading(false);
+        clearTimeout(timeoutId);
+
+        if (isMounted) {
+          setLoading(false);
+        }
       }
     };
 
     checkAuth();
+
+    return () => {
+      isMounted = false;
+      controller.abort();
+    };
   }, []);
 
   // Log in a user
@@ -52,6 +83,7 @@ export const AuthProvider = ({ children }) => {
     }
 
     setUser(data.user);
+    setAuthError(false);
     return data;
   };
 
@@ -69,6 +101,7 @@ export const AuthProvider = ({ children }) => {
     }
 
     setUser(null);
+    setAuthError(false);
     return data;
   };
 
@@ -78,6 +111,7 @@ export const AuthProvider = ({ children }) => {
         user,
         loading,
         isAuthenticated: Boolean(user),
+        authError,
         login,
         logout,
       }}
