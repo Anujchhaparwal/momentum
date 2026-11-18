@@ -65,7 +65,7 @@ export const AuthProvider = ({ children }) => {
     };
   }, []);
 
-  // Log in a user
+  // Login
   const login = async (email, password) => {
     const response = await fetch(`${API_URL}/auth/login`, {
       method: "POST",
@@ -87,7 +87,26 @@ export const AuthProvider = ({ children }) => {
     return data;
   };
 
-  // Log out the current user
+
+  // Login demo user
+  const demoLogin = async () => {
+    const response = await fetch(`${API_URL}/auth/demo`, {
+      method: "POST",
+      credentials: "include",
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.message || "Demo login failed");
+    }
+
+    setUser(data.user);
+    setAuthError(false);
+    return data;
+  };
+
+  // Logout 
   const logout = async () => {
     const response = await fetch(`${API_URL}/auth/logout`, {
       method: "POST",
@@ -113,6 +132,7 @@ export const AuthProvider = ({ children }) => {
         isAuthenticated: Boolean(user),
         authError,
         login,
+        demoLogin,
         logout,
       }}
     >
@@ -121,7 +141,6 @@ export const AuthProvider = ({ children }) => {
   );
 };
 
-// Custom hook to access authentication
 export const useAuth = () => {
   const context = useContext(AuthContext);
 

@@ -3,6 +3,7 @@ import {
   registerUser,
   verifyEmail,
   resendVerification,
+  loginDemo,
   loginUser,
   logoutUser,
   getCurrentUser,
@@ -20,6 +21,7 @@ router.post("/register", registerLimiter, registerUser);
 router.get("/verify-email", verifyEmail);
 router.post("/resend-verification", resendLimiter, resendVerification);
 router.post("/login", loginLimiter, loginUser);
+router.post("/demo", loginLimiter, loginDemo);
 router.post("/logout", logoutUser);
 router.get("/me", authMiddleware, getCurrentUser);
 

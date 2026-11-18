@@ -281,7 +281,10 @@ export const loginUser = async (req, res) => {
     }
 
     const token = jwt.sign(
-      { userId: user._id },
+      {
+        userId: user._id,
+        isDemo: user.isDemo,
+      },
       process.env.JWT_SECRET,
       { expiresIn: process.env.JWT_EXPIRES_IN }
     );
@@ -300,6 +303,7 @@ export const loginUser = async (req, res) => {
         id: user._id,
         name: user.name,
         email: user.email,
+        isDemo: user.isDemo,
       },
     });
   } catch (error) {
@@ -310,6 +314,59 @@ export const loginUser = async (req, res) => {
     });
   }
 };
+
+
+export const loginDemo = async (req, res) => {
+  try {
+    const demoUser = await User.findOne({
+      isDemo: true,
+    });
+
+    if (!demoUser) {
+      return res.status(404).json({
+        message: "Demo account is currently unavailable.",
+      });
+    }
+
+    if (!process.env.JWT_SECRET) {
+      throw new Error("JWT_SECRET is not configured");
+    }
+
+    const token = jwt.sign(
+      {
+        userId: demoUser._id,
+        isDemo: true,
+      },
+      process.env.JWT_SECRET,
+      { expiresIn: process.env.JWT_EXPIRES_IN }
+    );
+
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      maxAge: 24 * 60 * 60 * 1000,
+      path: "/",
+    });
+
+    return res.status(200).json({
+      message: "Demo login successful",
+      user: {
+        id: demoUser._id,
+        name: demoUser.name,
+        email: demoUser.email,
+        isDemo: true,
+      },
+    });
+  } catch (error) {
+    console.error("Demo login error:", error);
+
+    return res.status(500).json({
+      message: "Something went wrong during demo login",
+    });
+  }
+};
+
 
 export const logoutUser = (req, res) => {
   res.clearCookie("token", {
@@ -328,10 +385,10 @@ export const logoutUser = (req, res) => {
 export const getCurrentUser = async (req, res) => {
   try {
     const user = await User.findById(req.user.userId).select(
-      "name email isVerified"
+      "name email isVerified isDemo"
     );
 
-    if (!user || !user.isVerified) {
+    if (!user || (!user.isVerified && !user.isDemo)) {
       return res.status(401).json({
         message: "User not found or email not verified",
       });
@@ -342,6 +399,7 @@ export const getCurrentUser = async (req, res) => {
         id: user._id,
         name: user.name,
         email: user.email,
+        isDemo: user.isDemo,
       },
     });
   } catch (error) {

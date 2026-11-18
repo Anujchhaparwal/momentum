@@ -4,7 +4,7 @@ import "./Sidebar.css";
 
 function Sidebar({ activePage, setActivePage }) {
   const [menuOpen, setMenuOpen] = useState(false);
-  const { logout } = useAuth();
+  const { logout, user } = useAuth();
 
   const navigationItems = [
     { name: "Dashboard", icon: "⌂" },
@@ -50,15 +50,18 @@ function Sidebar({ activePage, setActivePage }) {
         <div className="sidebar-brand">
           <h2>Momentum</h2>
           <span>Personal dashboard</span>
+          
+          {user?.isDemo && (
+            <span className="demo-indicator">DEMO ACCOUNT</span>
+          )}
         </div>
 
         <nav className="sidebar-nav">
           {navigationItems.map((item) => (
             <button
               key={item.name}
-              className={`nav-item ${
-                activePage === item.name ? "active" : ""
-              }`}
+              className={`nav-item ${activePage === item.name ? "active" : ""
+                }`}
               onClick={() => handleNavigation(item.name)}
             >
               <span className="nav-icon">{item.icon}</span>

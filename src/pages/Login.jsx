@@ -1,16 +1,17 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../context/AuthContext.jsx";
 import "./Login.css";
 
 function Login() {
-  const { login } = useAuth();
+  const { login, demoLogin } = useAuth();
   const navigate = useNavigate();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -19,6 +20,20 @@ function Login() {
 
     try {
       await login(email, password);
+      navigate("/", { replace: true });
+    } catch (error) {
+      setError(error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDemoLogin = async () => {
+    setError("");
+    setLoading(true);
+
+    try {
+      await demoLogin();
       navigate("/", { replace: true });
     } catch (error) {
       setError(error.message);
@@ -68,6 +83,15 @@ function Login() {
             disabled={loading}
           >
             {loading ? "Logging in..." : "Log in"}
+          </button>
+
+          <button
+            type="button"
+            className="demo-button"
+            onClick={handleDemoLogin}
+            disabled={loading}
+          >
+            {loading ? "Opening demo..." : "Explore Demo Account"}
           </button>
         </form>
 

@@ -1,4 +1,3 @@
-
 import jwt from "jsonwebtoken";
 
 const authMiddleware = (req, res, next) => {
@@ -15,6 +14,7 @@ const authMiddleware = (req, res, next) => {
 
     req.user = {
       userId: decoded.userId,
+      isDemo: decoded.isDemo || false,
     };
 
     next();

@@ -29,6 +29,20 @@
   font-size: 12px;
 }
 
+.sidebar-brand .demo-indicator {
+  display: inline-block;
+  width: fit-content;
+  margin-top: 12px;
+  padding: 5px 9px;
+  border: 1px solid #6366F1;
+  border-radius: 5px;
+  background-color: rgba(99, 102, 241, 0.12);
+  color: #A5B4FC;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+}
+
 .sidebar-nav {
   display: flex;
   flex-direction: column;
@@ -117,6 +131,7 @@
   .mobile-header h2 {
     margin: 0;
     font-size: 20px;
+    color: #F9FAFB;
   }
 
   .menu-button {
